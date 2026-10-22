@@ -19,7 +19,10 @@ export default defineConfig({
     },
   },
   lastUpdated: false,
-  head: [['link', { rel: 'describedby', href: `${base}llms.txt`, type: 'text/plain' }]],
+  head: [
+    ['link', { rel: 'icon', href: 'https://www.kookapp.cn/favicon.ico', type: 'image/x-icon' }],
+    ['link', { rel: 'describedby', href: `${base}llms.txt`, type: 'text/plain' }],
+  ],
   transformHead({ pageData }) {
     if (pageData.relativePath === '404.md') return []
     return [['link', { rel: 'alternate', type: 'text/markdown', href: `${base}${pageData.relativePath}` }]]
