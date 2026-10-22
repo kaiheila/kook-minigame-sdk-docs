@@ -1,18 +1,12 @@
 # 快速开始
 
-目标是先展示可运行的游戏，再根据游戏需要触发登录授权。纯静态体验可以不申请 OAuth 权限。
+当前仅发布接入文档，SDK 尚未发布。以下示例用于提前了解接入流程，待 SDK 发布并安装后运行。接入目标是先展示游戏，再根据游戏需要触发登录授权；纯静态体验可以不申请 OAuth 权限。
 
-## 1. 安装交付包
+## 1. 确认 SDK 发布状态
 
-正式包名为 `@kookapp/kook-minigame-sdk`，发布源为 npmjs。首次发布尚未完成，目前使用对接方提供的 SDK 压缩包。将路径替换为你收到的文件：
+SDK 包名为 `@kookapp/kook-minigame-sdk`，计划发布至 npmjs。**截至 2026-10-22，SDK 尚未发布，暂不提供安装命令或下载包。** 发布后将在[版本说明](../releases.md)补充安装方式与可用版本。
 
-```sh
-pnpm add ./vendor/kookapp-kook-minigame-sdk-0.1.0-alpha.0.tgz
-```
-
-首次发布后，预览版本可通过 `pnpm add @kookapp/kook-minigame-sdk@next` 安装；接入时锁定双方确认的版本。
-
-包提供 ESM、CommonJS、浏览器全局构建和 TypeScript 类型。常规前端项目使用 ESM；无需直接依赖底层 bridge。构建产物不要求游戏增加 polyfill。
+发布包将提供 ESM、CommonJS、浏览器全局构建和 TypeScript 类型。常规前端项目使用 ESM；无需直接依赖底层 bridge。构建产物不要求游戏增加 polyfill。
 
 ## 2. 创建客户端并运行游戏
 

@@ -4,11 +4,13 @@ import { dirname, resolve } from 'node:path'
 import { pages, siteUrl } from './site-config.mjs'
 
 const output = resolve('docs/.vitepress/dist')
-const full = ['# KOOK 小游戏 SDK 完整文档\n\n> 0.1.0-alpha.0 接入契约预览，更新于 2026-10-22。\n']
+const full = [
+  '# KOOK 小游戏 SDK 完整文档\n\n> 文档已发布，SDK 尚未发布。0.1.0-alpha.0 接入契约预览，更新于 2026-10-22。\n',
+]
 const index = [
   '# KOOK 小游戏 SDK',
-  '> @kookapp/kook-minigame-sdk：面向 PC/Web 游戏开发者的 TypeScript SDK，发布源为 npmjs。游戏先运行并完成 ready，再按需通过 session.get 请求 OAuth 授权。',
-  '文档对应 0.1.0-alpha.0，更新于 2026-10-22。前端不调用 authenticate，不传入 OAuth token；游戏后端校验 state、换码并建立自己的登录态。availableScopes 是可申请集合，不是用户同意记录。平台上下文接口及其 scope 尚待对接确认，不应自行推断。',
+  '> @kookapp/kook-minigame-sdk 接入文档：截至 2026-10-22，文档已发布，SDK 尚未发布，暂不提供安装命令或下载包。SDK 计划发布至 npmjs。',
+  '文档预览目标版本为 0.1.0-alpha.0。游戏先运行并完成 ready，再按需通过 session.get 请求 OAuth 授权；前端不调用 authenticate，不传入 OAuth token。游戏后端校验 state、换码并建立自己的登录态。availableScopes 是可申请集合，不是用户同意记录。平台上下文接口及其 scope 尚待对接确认，不应自行推断。',
   '## 接入文档',
 ]
 

@@ -86,6 +86,6 @@ export default defineConfig({
     darkModeSwitchLabel: '外观',
     sidebarMenuLabel: '目录',
     returnToTopLabel: '回到顶部',
-    footer: { message: 'SDK 0.1.0-alpha.0 · 接入契约预览 · 2026-10-22' },
+    footer: { message: '文档已发布 · SDK 尚未发布 · 2026-10-22' },
   },
 })
