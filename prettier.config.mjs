@@ -1,0 +1,18 @@
+export default {
+  printWidth: 120,
+  tabWidth: 2,
+  useTabs: false,
+  singleQuote: true,
+  semi: false,
+  trailingComma: 'es5',
+  bracketSpacing: true,
+  bracketSameLine: false,
+  arrowParens: 'always',
+  endOfLine: 'auto',
+  plugins: ['@trivago/prettier-plugin-sort-imports'],
+  importOrder: ['^node:', '^[a-zA-Z]', '^@', '^\\./', '^\\.\\./'],
+  importOrderSeparation: true,
+  importOrderSortSpecifiers: true,
+  importOrderParserPlugins: ['typescript'],
+  importOrderSideEffects: false,
+}

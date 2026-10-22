@@ -1,0 +1,73 @@
+.Layout {
+  --vp-c-brand-1: #4f54d8;
+  --vp-c-brand-2: #6469ee;
+  --vp-c-brand-3: #4f54d8;
+  --vp-c-brand-soft: #eef0ff;
+  --vp-font-family-base: 'Segoe UI', 'Microsoft YaHei', 'PingFang SC', sans-serif;
+  --vp-font-family-mono: 'Cascadia Code', 'Consolas', monospace;
+}
+.dark .Layout {
+  --vp-c-brand-1: #b1b5ff;
+  --vp-c-brand-2: #949af8;
+  --vp-c-brand-soft: #272a4e;
+}
+.VPDoc .content-container {
+  max-width: 760px !important;
+}
+.vp-doc {
+  line-height: 1.85;
+}
+.VPSidebarItem .text {
+  line-height: 1.65;
+}
+.VPNavBarTitle .title {
+  font-weight: 750;
+  letter-spacing: -0.02em;
+}
+.launch-flow {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin: 28px 0;
+}
+.launch-stage {
+  padding: 18px 18px 20px;
+  border-top: 3px solid var(--vp-c-brand-1);
+  background: var(--vp-c-bg-soft);
+}
+.launch-title {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 650;
+}
+.launch-description {
+  display: block;
+  color: var(--vp-c-text-2);
+  font-size: 14px;
+  line-height: 1.8;
+}
+.sdk-table-cell {
+  min-width: 150px;
+}
+.Layout :focus-visible {
+  outline: 3px solid var(--vp-c-brand-1);
+  outline-offset: 3px;
+}
+@media (max-width: 640px) {
+  .launch-flow {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+  .launch-stage {
+    border-top: 0;
+    border-left: 3px solid var(--vp-c-brand-1);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .Layout *,
+  .Layout *::before,
+  .Layout *::after {
+    scroll-behavior: auto !important;
+    transition: none !important;
+  }
+}
