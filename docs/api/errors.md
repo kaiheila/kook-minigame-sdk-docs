@@ -3,7 +3,8 @@
 SDK 拒绝的 Promise 返回带固定 `code` 的 `KookClientError`。`message` 与 `code` 相同，不透传宿主的自由文本、凭据或内部错误。授权和弹窗取消通过正常结果返回。
 
 ```ts
-import type { KookClientError } from '@kookapp/kook-minigame-sdk'
+// SDK_MODULE 为导入路径占位符，实际导入方式以发布说明为准。
+import type { KookClientError } from 'SDK_MODULE'
 
 try {
   const page = await client.instance.getParticipants()

@@ -5,7 +5,8 @@
 ## createKookClient(options)
 
 ```ts
-import createKookClient from '@kookapp/kook-minigame-sdk'
+// SDK_MODULE 为导入路径占位符，实际导入方式以发布说明为准。
+import createKookClient from 'SDK_MODULE'
 
 const client = createKookClient(bootstrap)
 ```

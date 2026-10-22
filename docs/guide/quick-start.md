@@ -4,7 +4,7 @@
 
 ## 1. 确认 SDK 发布状态
 
-SDK 包名为 `@kookapp/kook-minigame-sdk`，计划发布至 npmjs。**截至 2026-10-22，SDK 尚未发布，暂不提供安装命令或下载包。** 发布后将在[版本说明](../releases.md)补充安装方式与可用版本。
+**截至 2026-10-22，SDK 尚未发布，暂不提供安装命令或下载包。** 发布后将在[版本说明](../releases.md)补充安装方式、实际导入路径与可用版本。
 
 发布包将提供 ESM、CommonJS、浏览器全局构建和 TypeScript 类型。常规前端项目使用 ESM；无需直接依赖底层 bridge。构建产物不要求游戏增加 polyfill。
 
@@ -13,8 +13,9 @@ SDK 包名为 `@kookapp/kook-minigame-sdk`，计划发布至 npmjs。**截至 20
 `bootstrap` 初始数据由 KOOK 客户端直接传入游戏的初始化入口。游戏接收后，将它传给 `createKookClient`；下面的 `startGame` 是游戏侧初始化函数示例。不要自行生成启动绑定，或从任意 query 参数拼出宿主来源。
 
 ```ts
-import createKookClient from '@kookapp/kook-minigame-sdk'
-import type { KookClientOptions } from '@kookapp/kook-minigame-sdk'
+// SDK_MODULE 为导入路径占位符，实际导入方式以发布说明为准。
+import createKookClient from 'SDK_MODULE'
+import type { KookClientOptions } from 'SDK_MODULE'
 
 export async function startGame(bootstrap: KookClientOptions) {
   const client = createKookClient(bootstrap)
@@ -43,7 +44,8 @@ export async function startGame(bootstrap: KookClientOptions) {
 使用 OAuth 登录时，在开发者后台配置 `redirect_uri`。开发者后台目前仍在开发中。配置与服务端处理要求见[游戏后端登录](./server-login.md)。
 
 ```ts
-import type { KookClient, SessionCodeResult } from '@kookapp/kook-minigame-sdk'
+// SDK_MODULE 为导入路径占位符，实际导入方式以发布说明为准。
+import type { KookClient, SessionCodeResult } from 'SDK_MODULE'
 
 interface GameBackend {
   beginLogin(): Promise<{ state: string }>

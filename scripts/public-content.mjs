@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict'
 
 const rules = [
+  ['unreleased package identifier', /(?:@|%40)kookapp(?:\/|%2f)/i],
   ['local path', /(?:[a-z]:[\\/]+Users[\\/]|\/(?:Users|home)\/[^\s/]+\/|file:\/\/)/i],
   ['internal service URL', /https?:\/\/(?:[\w-]+\.)*(?:wiki|jira|confluence|jenkins|internal|intranet)[.-]/i],
   ['private key', /-----BEGIN (?:[A-Z]+ )*PRIVATE KEY-----/],
