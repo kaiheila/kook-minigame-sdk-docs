@@ -14,7 +14,7 @@
 
 ```ts
 // SDK_MODULE 为导入路径占位符，实际导入方式以发布说明为准。
-import createKookClient from 'SDK_MODULE'
+import { createKookClient } from 'SDK_MODULE'
 import type { KookClientOptions } from 'SDK_MODULE'
 
 export async function startGame(bootstrap: KookClientOptions) {
