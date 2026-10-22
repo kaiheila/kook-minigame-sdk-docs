@@ -10,7 +10,7 @@ const full = [
 const index = [
   '# KOOK 小游戏 SDK',
   '> @kookapp/kook-minigame-sdk 接入文档：截至 2026-10-22，文档已发布，SDK 尚未发布，暂不提供安装命令或下载包。SDK 计划发布至 npmjs。',
-  '文档预览目标版本为 0.1.0-alpha.0。游戏先运行并完成 ready，再按需通过 session.get 请求 OAuth 授权；前端不调用 authenticate，不传入 OAuth token。游戏后端校验 state、换码并建立自己的登录态。availableScopes 是可申请集合，不是用户同意记录。平台上下文接口及其 scope 尚待对接确认，不应自行推断。',
+  '文档预览目标版本为 0.1.0-alpha.0。bootstrap 初始数据由 KOOK 客户端直接传入。游戏先运行并完成 ready，再按需通过 session.get 请求 OAuth 授权；前端不调用 authenticate，不传入 OAuth token。游戏后端校验 state、换码并建立自己的登录态。redirect_uri 在开发者后台配置，开发者后台目前仍在开发中。availableScopes 是可申请集合，不是用户同意记录。',
   '## 接入文档',
 ]
 

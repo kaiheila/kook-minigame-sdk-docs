@@ -10,7 +10,7 @@ SDK 包名为 `@kookapp/kook-minigame-sdk`，计划发布至 npmjs。**截至 20
 
 ## 2. 创建客户端并运行游戏
 
-`bootstrap` 来自 KOOK 可信启动链路，接入时与对接方确认注入方式。它不是 SDK 自动提供的全局变量，也不要从任意 query 参数拼出宿主来源。
+`bootstrap` 初始数据由 KOOK 客户端直接传入游戏的初始化入口。游戏接收后，将它传给 `createKookClient`；下面的 `startGame` 是游戏侧初始化函数示例。不要自行生成启动绑定，或从任意 query 参数拼出宿主来源。
 
 ```ts
 import createKookClient from '@kookapp/kook-minigame-sdk'
@@ -32,13 +32,15 @@ export async function startGame(bootstrap: KookClientOptions) {
 }
 ```
 
-必需启动参数是 `hostOrigin`、`sessionId`、`generation`。`hostOrigin` 必须是单一 HTTPS origin，不能带路径或使用 `*`。`connectionTimeoutMs` 可选。不要把凭据放进这些参数。
+客户端传入的必需启动参数是 `hostOrigin`、`sessionId`、`generation`。`hostOrigin` 必须是单一 HTTPS origin，不能带路径或使用 `*`。`connectionTimeoutMs` 可选。不要把凭据放进这些参数。
 
 只有游戏真正可用后才上报 `loaded`。如果游戏必须登录才能可用，将该上报移到游戏后端登录和资源初始化完成之后。
 
 ## 3. 在登录交互中申请授权
 
 以下 `backend` 是游戏自己实现的接口适配器，不是 SDK 提供的对象。准备登录事务可以提前完成，授权弹窗应由明确的用户交互触发。
+
+使用 OAuth 登录时，在开发者后台配置 `redirect_uri`。开发者后台目前仍在开发中。配置与服务端处理要求见[游戏后端登录](./server-login.md)。
 
 ```ts
 import type { KookClient, SessionCodeResult } from '@kookapp/kook-minigame-sdk'

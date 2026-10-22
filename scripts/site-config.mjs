@@ -4,7 +4,7 @@ export const pages = [
   ['index.md', '概览', 'SDK 的职责与接入路径'],
   ['guide/quick-start.md', '快速开始', 'SDK 发布状态与接入流程预览'],
   ['guide/authorization.md', '启动与授权时序', '先开游戏、后授权；授权取消与服务端换码'],
-  ['guide/server-login.md', '游戏后端登录', 'state、OAuth 凭据、可信上下文和游戏登录态'],
+  ['guide/server-login.md', '游戏后端登录', 'state、redirect_uri、OAuth 凭据和游戏登录态'],
   ['guide/permissions.md', '权限与能力', 'availableScopes、用户授权与 capability 的区别'],
   ['guide/lifecycle.md', '生命周期与恢复', '加载上报、连接变化、终止与重新就绪'],
   ['guide/social.md', '邀请与参与者', '原生弹窗、候选身份、分页与参与者变化'],

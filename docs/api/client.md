@@ -17,7 +17,7 @@ const client = createKookClient(bootstrap)
 | `generation`          | `number`  | 非负安全整数，启动代次               |
 | `connectionTimeoutMs` | `number?` | 握手超时，100–30000 毫秒，默认 10000 |
 
-创建时检查参数并保存不可变副本；不会立即建立通道。可以在 SSR 环境导入模块，实际连接需要受支持的浏览器嵌入环境。
+`bootstrap` 初始数据由 KOOK 客户端直接传入，游戏将其交给 `createKookClient`。创建时检查参数并保存不可变副本；不会立即建立通道。可以在 SSR 环境导入模块，实际连接需要受支持的浏览器嵌入环境。
 
 ## connect(): Promise&lt;void&gt;
 
@@ -40,7 +40,7 @@ const client = createKookClient(bootstrap)
 | `context.launchSource` | `channel / appLauncher / invite`                        |
 | `context.roomId?`      | 邀请入口携带的游戏房间参数，仅在 `invite` 场景出现      |
 
-返回值不含当前用户、OAuth token、内部频道 ID 或服务器 ID。后端权限判断所需的可信身份和上下文由服务端接口获取。
+返回值不含当前用户、OAuth token、内部频道 ID 或服务器 ID。环境信息用于页面展示和入口处理；可信用户身份由游戏后端通过平台服务端接口取得，游戏业务权限由游戏后端校验。
 
 ## session.get(input): Promise&lt;SessionCodeResult&gt;
 
