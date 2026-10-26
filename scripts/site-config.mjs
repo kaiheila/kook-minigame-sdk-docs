@@ -2,7 +2,7 @@ export const base = '/kook-minigame-sdk-docs/'
 export const siteUrl = `https://kaiheila.github.io${base}`
 export const pages = [
   ['index.md', '概览', 'SDK 的职责与接入路径'],
-  ['guide/quick-start.md', '快速开始', 'SDK 发布状态与接入流程预览'],
+  ['guide/quick-start.md', '快速开始', '正式包名、版本选择与接入流程'],
   ['guide/authorization.md', '启动与授权时序', '先开游戏、后授权；授权取消与服务端换码'],
   ['guide/server-login.md', '游戏后端登录', 'state、redirect_uri、OAuth 凭据和游戏登录态'],
   ['guide/permissions.md', '权限与能力', 'availableScopes、用户授权与 capability 的区别'],
@@ -14,5 +14,5 @@ export const pages = [
   ['api/errors.md', '错误处理', '错误码、超时和重试边界'],
   ['guide/checklist.md', '接入检查', '联调与上线前的行为验收'],
   ['guide/migration.md', '迁移与常见问题', '移除 authenticate 和旧字段'],
-  ['releases.md', '版本与支持范围', '文档已发布、SDK 尚未发布；能力预览和接入要求'],
+  ['releases.md', '版本与支持范围', '已发布 alpha.0、待发布具名入口 alpha.1 与接入要求'],
 ]

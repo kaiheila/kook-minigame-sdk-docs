@@ -2,7 +2,7 @@ import assert from 'node:assert/strict'
 
 const rules = [
   ['default SDK import', /\bimport\s+createKookClient\s*(?:,|from\b)/],
-  ['unreleased package identifier', /(?:@|%40)kookapp(?:\/|%2f)/i],
+  ['internal package identifier', /(?:@|%40)kookapp(?:\/|%2f)(?!kook-minigame-sdk(?:[^a-z0-9._-]|$))/i],
   ['local path', /(?:[a-z]:[\\/]+Users[\\/]|\/(?:Users|home)\/[^\s/]+\/|file:\/\/)/i],
   ['internal service URL', /https?:\/\/(?:[\w-]+\.)*(?:wiki|jira|confluence|jenkins|internal|intranet)[.-]/i],
   ['private key', /-----BEGIN (?:[A-Z]+ )*PRIVATE KEY-----/],

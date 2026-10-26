@@ -5,12 +5,12 @@ import { pages, siteUrl } from './site-config.mjs'
 
 const output = resolve('docs/.vitepress/dist')
 const full = [
-  '# KOOK 小游戏 SDK 完整文档\n\n> 文档已发布，SDK 尚未发布。0.1.0-alpha.0 接入契约预览，更新于 2026-10-22。\n',
+  '# KOOK 小游戏 SDK 完整文档\n\n> @kookapp/kook-minigame-sdk：npm 已发布 0.1.0-alpha.0；本文档采用具名入口，对应待发布的 0.1.0-alpha.1，更新于 2026-10-26。\n',
 ]
 const index = [
   '# KOOK 小游戏 SDK',
-  '> KOOK 小游戏 SDK 接入文档：截至 2026-10-22，文档已发布，SDK 尚未发布，暂不提供安装命令或下载包；安装与导入方式将在 SDK 发布后补充。',
-  '文档预览目标版本为 0.1.0-alpha.0。bootstrap 初始数据由 KOOK 客户端直接传入。游戏先运行并完成 ready，再按需通过 session.get 请求 OAuth 授权；前端不调用 authenticate，不传入 OAuth token。游戏后端校验 state、换码并建立自己的登录态。redirect_uri 在开发者后台配置，开发者后台目前仍在开发中。availableScopes 是可申请集合，不是用户同意记录。',
+  '> KOOK 小游戏 SDK 接入文档：正式包名为 @kookapp/kook-minigame-sdk。截至 2026-10-26，npm 已发布 0.1.0-alpha.0（默认导出）；本文档的 createKookClient 具名导入对应待发布的 0.1.0-alpha.1。',
+  '0.1.0-alpha.1 发布后固定版本安装：pnpm add @kookapp/kook-minigame-sdk@0.1.0-alpha.1。不能将旧包与新版具名导入混用。bootstrap 初始数据由 KOOK 客户端直接传入。游戏先运行并完成 ready，再按需通过 session.get 请求 OAuth 授权；前端不调用 authenticate，不传入 OAuth token。游戏后端校验 state、换码并建立自己的登录态。redirect_uri 在开发者后台配置，开发者后台目前仍在开发中。availableScopes 是可申请集合，不是用户同意记录。',
   '## 接入文档',
 ]
 

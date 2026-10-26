@@ -1,10 +1,10 @@
 # 版本与支持范围
 
-## 2026-10-22 · 文档已发布，SDK 尚未发布
+## 版本状态（2026-10-26）
 
-当前发布的是接入文档，用于预览 KOOK 小游戏 SDK 的接入流程、API 和类型。文档中的 `0.1.0-alpha.0` 是预览目标版本，SDK 尚未发布，也未在本文档中提供安装包。
+正式包名为 [`@kookapp/kook-minigame-sdk`](https://www.npmjs.com/package/@kookapp/kook-minigame-sdk)。`0.1.0-alpha.0` 已于 2026-10-22 发布到 npmjs，该版本仍使用默认导出。
 
-SDK 发布后，本页将补充实际发布版本、安装方式和变更记录。正式接入时请使用届时发布的版本，并按[接入检查](./guide/checklist.md)核验完整流程。
+本文档采用 `createKookClient` 具名入口，对应修订版 `0.1.0-alpha.1`，该版本待发布。修订版发布后，按[快速开始](./guide/quick-start.md)固定版本安装，并将 ESM 改为 `import { createKookClient } from '@kookapp/kook-minigame-sdk'`；CommonJS 从 `require(...)` 解构同名成员。不要将 `0.1.0-alpha.0` 与具名导入示例混用。
 
 本次文档说明的接入契约：
 
@@ -18,13 +18,13 @@ SDK 发布后，本页将补充实际发布版本、安装方式和变更记录�
 
 PC/Web 嵌入通信、就绪信息、授权码入口、能力与 scope 检查、社交候选、频道成员、实例参与者、邀请与官方服务器原生弹窗、加载上报、生命周期和授权事件、可选心跳与受控恢复。
 
-发布包将提供 ESM、CJS、浏览器全局构建及 TypeScript 类型，使用 ES2020 原生能力，不内置 polyfill。SDK 发布后，游戏仍需在支持小游戏的 KOOK 客户端中验证自己的代码和依赖。
+发布包提供 ESM、CJS、浏览器全局构建及 TypeScript 类型，使用 ES2020 原生能力，不内置 polyfill。游戏仍需在支持小游戏的 KOOK 客户端中验证自己的代码和依赖。
 
 ## 接入配置与准备
 
 `bootstrap` 初始数据由 KOOK 客户端直接传入。使用 OAuth 登录时，在开发者后台配置 `redirect_uri`；开发者后台目前仍在开发中。应用凭据与 OAuth 换码地址按平台提供的接入信息配置。
 
-游戏方可先依据文档中的 API、类型和示例准备开发；SDK 发布后按其能力实现接入，再在支持小游戏的 KOOK 客户端中验证完整流程。
+游戏方可依据文档中的 API、类型和示例准备开发，使用与导入方式匹配的 SDK 版本接入，再按[接入检查](./guide/checklist.md)在支持小游戏的 KOOK 客户端中验证完整流程。
 
 广告、支付、快捷键、Rich Presence 和移动端游戏启动不在本版本 SDK 支持范围内。当前接入无需配置 URL Mapping。可调用的方法以本版本 API 文档为准。
 

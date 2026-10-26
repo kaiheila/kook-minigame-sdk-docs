@@ -1,21 +1,26 @@
 # 快速开始
 
-当前仅发布接入文档，SDK 尚未发布。以下示例用于提前了解接入流程，待 SDK 发布并安装后运行。接入目标是先展示游戏，再根据游戏需要触发登录授权；纯静态体验可以不申请 OAuth 权限。
+正式包名为 `@kookapp/kook-minigame-sdk`，发布到 npmjs。以下示例采用 `createKookClient` 具名导入，对应待发布的 `0.1.0-alpha.1`。接入目标是先展示游戏，再根据游戏需要触发登录授权；纯静态体验可以不申请 OAuth 权限。
 
 ## 1. 确认 SDK 发布状态
 
-**截至 2026-10-22，SDK 尚未发布，暂不提供安装命令或下载包。** 发布后将在[版本说明](../releases.md)补充安装方式、实际导入路径与可用版本。
+**截至 2026-10-26，npm 上的 `0.1.0-alpha.0` 仍使用默认导出，不能直接运行下面的具名导入示例。** `0.1.0-alpha.1` 发布后，固定版本安装：
 
-发布包将提供 ESM、CommonJS、浏览器全局构建和 TypeScript 类型。常规前端项目使用 ESM；无需直接依赖底层 bridge。构建产物不要求游戏增加 polyfill。
+```sh
+pnpm add @kookapp/kook-minigame-sdk@0.1.0-alpha.1
+```
+
+该安装命令需等修订版发布后执行。当前状态与入口变更见[版本说明](../releases.md)。
+
+发布包提供 ESM、CommonJS、浏览器全局构建和 TypeScript 类型。常规前端项目使用 ESM；无需直接依赖底层 bridge。构建产物不要求游戏增加 polyfill。
 
 ## 2. 创建客户端并运行游戏
 
 `bootstrap` 初始数据由 KOOK 客户端直接传入游戏的初始化入口。游戏接收后，将它传给 `createKookClient`；下面的 `startGame` 是游戏侧初始化函数示例。不要自行生成启动绑定，或从任意 query 参数拼出宿主来源。
 
 ```ts
-// SDK_MODULE 为导入路径占位符，实际导入方式以发布说明为准。
-import { createKookClient } from 'SDK_MODULE'
-import type { KookClientOptions } from 'SDK_MODULE'
+import { createKookClient } from '@kookapp/kook-minigame-sdk'
+import type { KookClientOptions } from '@kookapp/kook-minigame-sdk'
 
 export async function startGame(bootstrap: KookClientOptions) {
   const client = createKookClient(bootstrap)
@@ -44,8 +49,7 @@ export async function startGame(bootstrap: KookClientOptions) {
 使用 OAuth 登录时，在开发者后台配置 `redirect_uri`。开发者后台目前仍在开发中。配置与服务端处理要求见[游戏后端登录](./server-login.md)。
 
 ```ts
-// SDK_MODULE 为导入路径占位符，实际导入方式以发布说明为准。
-import type { KookClient, SessionCodeResult } from 'SDK_MODULE'
+import type { KookClient, SessionCodeResult } from '@kookapp/kook-minigame-sdk'
 
 interface GameBackend {
   beginLogin(): Promise<{ state: string }>
