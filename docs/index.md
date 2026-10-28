@@ -5,7 +5,7 @@ description: 游戏先运行，在需要 KOOK 身份和数据时申请用户授�
 
 # 将小游戏接入 KOOK
 
-**发布状态（2026-10-26）：正式包名为 `@kookapp/kook-minigame-sdk`。npm 已发布 `0.1.0-alpha.0`；本文档采用具名入口，对应待发布的 `0.1.0-alpha.1`。请先查看[版本说明](./releases.md)，避免将旧包与新版导入方式混用。**
+**发布状态（2026-10-28）：`@kookapp/kook-minigame-sdk@0.1.0-alpha.3` 已发布到 npmjs 的 `next` 标签，支持 `createKookClient` 具名导入，以及 `get_user_info`、`mini_game.context` 两个公开 scope。请按[快速开始](./guide/quick-start.md)固定版本安装。**
 
 KOOK 小游戏 SDK 连接游戏页面与 KOOK 客户端，提供启动环境、用户授权入口、邀请弹窗、参与者和生命周期能力。游戏页面先运行，在需要 KOOK 身份或数据时申请授权。
 
@@ -36,6 +36,6 @@ KOOK 小游戏 SDK 连接游戏页面与 KOOK 客户端，提供启动环境、�
 
 ## 文档版本
 
-本文档对应 **KOOK 小游戏 SDK 0.1.0-alpha.1** 的具名入口，更新于 **2026-10-26**；该修订版待发布。可选能力仍需通过运行时检查，实际可用范围取决于 KOOK 客户端支持的能力。[查看发布状态与接入要求](./releases.md)。
+本文档对应 **KOOK 小游戏 SDK 0.1.0-alpha.3**，更新于 **2026-10-28**。可选能力仍需通过运行时检查，实际可用范围取决于 KOOK 客户端支持的能力。[查看发布状态与接入要求](./releases.md)。
 
 AI 编程工具可从 [llms.txt](/llms.txt) 读取索引，或使用 [完整 Markdown 文档](/llms-full.txt)。

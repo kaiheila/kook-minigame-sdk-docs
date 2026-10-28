@@ -2,9 +2,9 @@
 
 ## 版本状态（2026-10-28）
 
-正式包名为 [`@kookapp/kook-minigame-sdk`](https://www.npmjs.com/package/@kookapp/kook-minigame-sdk)。`0.1.0-alpha.0` 已于 2026-10-22 发布到 npmjs，该版本仍使用默认导出。
+正式包名为 [`@kookapp/kook-minigame-sdk`](https://www.npmjs.com/package/@kookapp/kook-minigame-sdk)。`0.1.0-alpha.3` 已于 2026-10-28 发布到 npmjs，使用 `next` 标签。本文档的 API、scope 和类型均以此版本为准。
 
-本文档采用 `createKookClient` 具名入口，对应修订版 `0.1.0-alpha.1`，该版本待发布。修订版发布后，按[快速开始](./guide/quick-start.md)固定版本安装，并将 ESM 改为 `import { createKookClient } from '@kookapp/kook-minigame-sdk'`；CommonJS 从 `require(...)` 解构同名成员。不要将 `0.1.0-alpha.0` 与具名导入示例混用。
+按[快速开始](./guide/quick-start.md)固定版本安装。ESM 使用 `import { createKookClient } from '@kookapp/kook-minigame-sdk'`；CommonJS 从 `require(...)` 解构同名成员。`0.1.0-alpha.0` 使用默认导出；`0.1.0-alpha.2` 支持具名导入，但未包含本次 scope 修订。旧版本请升级到 `0.1.0-alpha.3` 后再按本文档接入。
 
 本次文档说明的接入契约：
 
