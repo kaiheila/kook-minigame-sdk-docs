@@ -5,12 +5,12 @@ import { pages, siteUrl } from './site-config.mjs'
 
 const output = resolve('docs/.vitepress/dist')
 const full = [
-  '# KOOK 小游戏 SDK 完整文档\n\n> @kookapp/kook-minigame-sdk：npm 已发布 0.1.0-alpha.0；本文档采用具名入口，对应待发布的 0.1.0-alpha.1，更新于 2026-10-26。\n',
+  '# KOOK 小游戏 SDK 完整文档\n\n> @kookapp/kook-minigame-sdk：0.1.0-alpha.3 已发布到 npmjs 的 next 标签；采用 createKookClient 具名入口，公开 scope 为 get_user_info 和 mini_game.context，兼容 profile.basic 别名。更新于 2026-10-28。\n',
 ]
 const index = [
   '# KOOK 小游戏 SDK',
-  '> KOOK 小游戏 SDK 接入文档：正式包名为 @kookapp/kook-minigame-sdk。截至 2026-10-26，npm 已发布 0.1.0-alpha.0（默认导出）；本文档的 createKookClient 具名导入对应待发布的 0.1.0-alpha.1。',
-  '0.1.0-alpha.1 发布后固定版本安装：pnpm add @kookapp/kook-minigame-sdk@0.1.0-alpha.1。不能将旧包与新版具名导入混用。bootstrap 初始数据由 KOOK 客户端直接传入。游戏先运行并完成 ready，再按需通过 session.get 请求 OAuth 授权；前端不调用 authenticate，不传入 OAuth token。游戏后端校验 state、换码并建立自己的登录态。redirect_uri 在开发者后台配置，开发者后台目前仍在开发中。availableScopes 是可申请集合，不是用户同意记录。',
+  '> KOOK 小游戏 SDK 接入文档：正式包名为 @kookapp/kook-minigame-sdk。0.1.0-alpha.3 已于 2026-10-28 发布到 npmjs 的 next 标签，使用 createKookClient 具名导入。',
+  '固定版本安装：pnpm add @kookapp/kook-minigame-sdk@0.1.0-alpha.3。公开 scope 为 get_user_info 和 mini_game.context，profile.basic 兼容映射为 get_user_info；默认只申请 get_user_info，可显式追加 mini_game.context。bootstrap 初始数据由 KOOK 客户端直接传入。游戏先运行并完成 ready，再按需通过 session.get 请求 OAuth 授权；前端不调用 authenticate，不传入 OAuth token。游戏后端校验 state、换码并建立自己的登录态。redirect_uri 在开发者后台配置，开发者后台目前仍在开发中。availableScopes 是可申请集合，不是用户同意记录。',
   '## 接入文档',
 ]
 
