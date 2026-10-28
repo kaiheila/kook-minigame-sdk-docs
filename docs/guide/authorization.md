@@ -27,7 +27,7 @@
 | `session.get()` 成功 / `auth.onStateChanged` | 宿主确认的当前 SDK 授权 | 游戏后端已经登录成功 |
 | 游戏后端自己的会话                           | 游戏业务身份和登录状态  | KOOK 权限永远有效    |
 
-调用 `session.get()` 时，默认申请唯一 scope `get_user_info`，并且要求它属于 `availableScopes`。`profile.basic` 是兼容别名，SDK 会自动映射为 `get_user_info`；结果和事件中的 scope 统一使用正式名称。
+调用 `session.get()` 时，默认只申请 `get_user_info`；需要小游戏上下文权限时可显式追加 `mini_game.context`。请求集合必须包含 `get_user_info` 且为 `availableScopes` 的子集。`profile.basic` 是兼容别名，SDK 会自动映射为 `get_user_info`；结果和事件中的 scope 统一使用正式名称。
 
 ## 取消、失败与撤销
 

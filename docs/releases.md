@@ -10,8 +10,8 @@
 
 - 采用先启动游戏、完成 `ready()`、再按需 OAuth 授权的顺序。
 - 移除 `authenticate()` 和前端 OAuth token 输入。
-- 唯一 scope 为 `get_user_info`，兼容 `profile.basic` 别名并自动映射；请求、结果和授权事件统一使用正式名称。
-- `availableScopes` 表示可申请集合；`session.get()` 默认申请 `get_user_info`，支持取消分支。
+- 公开 scope 为 `get_user_info` 和 `mini_game.context`，兼容 `profile.basic` 别名并自动映射为 `get_user_info`；请求、结果和授权事件统一使用正式名称。
+- `availableScopes` 表示可申请集合；`session.get()` 默认只申请 `get_user_info`，可显式追加 `mini_game.context`，支持取消分支。
 - SDK 授权与授权码有效期、游戏后端会话分开维护。
 - 允许静态游戏无需 OAuth 运行；恢复后读取宿主新快照。
 

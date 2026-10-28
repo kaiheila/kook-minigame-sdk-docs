@@ -79,8 +79,8 @@ export interface KookClientError extends Error {
   readonly code: KookClientErrorCode
 }
 
-/** get_user_info is the only scope. profile.basic is a compatibility alias. */
-export type Scope = 'get_user_info' | 'profile.basic'
+/** Public scopes. profile.basic is a compatibility alias for get_user_info. */
+export type Scope = 'get_user_info' | 'mini_game.context' | 'profile.basic'
 
 /** Implemented optional abilities. Availability still depends on the current host. */
 export type KookCapability =

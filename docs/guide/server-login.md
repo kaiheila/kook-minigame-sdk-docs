@@ -17,7 +17,7 @@
 
 在开发者后台配置应用的 `redirect_uri`。**开发者后台目前仍在开发中。** 游戏后端按平台 OAuth 接口要求使用与授权流程一致的 `redirect_uri`；无需通过 `session.get()` 传入该参数。
 
-OAuth 换码地址与应用凭据按平台提供的接入信息配置，应用密钥只保存在游戏后端。唯一 scope 为 `get_user_info`，用于读取用户信息。`profile.basic` 是兼容别名，SDK 会在发送授权请求前自动映射为 `get_user_info`。
+OAuth 换码地址与应用凭据按平台提供的接入信息配置，应用密钥只保存在游戏后端。公开 scope 为 `get_user_info`（用户信息）和 `mini_game.context`（小游戏上下文）；前者默认申请，后者按需显式追加。`profile.basic` 是兼容别名，SDK 会在发送授权请求前自动映射为 `get_user_info`。
 
 `ready()` 返回的环境信息可用于页面展示与游戏入口处理；用户身份以服务端取得的数据为准，游戏业务权限由游戏后端校验。
 
