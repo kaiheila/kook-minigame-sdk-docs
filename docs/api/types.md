@@ -1,6 +1,6 @@
 # 类型定义
 
-以下为已发布的 SDK `0.1.0-alpha.3` 的公开类型快照（2026-10-28）。安装对应版本后，可从 `@kookapp/kook-minigame-sdk` 直接导入这些类型，无需复制到项目中。
+以下为 SDK `0.1.0-alpha.3` 的公开类型快照（2026-10-28）；该版本已提交 npm，仍在发布处理中。版本可用并安装后，可从 `@kookapp/kook-minigame-sdk` 直接导入这些类型，无需复制到项目中。
 
 ```ts
 /** Route binding supplied by the trusted launcher; never an authorization credential. */

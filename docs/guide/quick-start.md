@@ -1,10 +1,10 @@
 # 快速开始
 
-正式包名为 `@kookapp/kook-minigame-sdk`，发布到 npmjs。以下示例采用 `createKookClient` 具名导入，对应已发布的 `0.1.0-alpha.3`。接入目标是先展示游戏，再根据游戏需要触发登录授权；纯静态体验可以不申请 OAuth 权限。
+正式包名为 `@kookapp/kook-minigame-sdk`，发布到 npmjs。以下示例采用 `createKookClient` 具名导入，对应发布处理中的 `0.1.0-alpha.3`。接入目标是先展示游戏，再根据游戏需要触发登录授权；纯静态体验可以不申请 OAuth 权限。
 
 ## 1. 安装 SDK
 
-`0.1.0-alpha.3` 已发布到 `next` 标签。为确保导入方式和 scope 与本文档一致，固定版本安装：
+`0.1.0-alpha.3` 的发布已被 npm 受理，目标为 `next` 标签；当前仍在后台处理，暂不可下载。待公开 registry 提供该版本后，再执行以下固定版本安装命令；`alpha.2` 不包含本次 scope 修订：
 
 ```sh
 pnpm add @kookapp/kook-minigame-sdk@0.1.0-alpha.3

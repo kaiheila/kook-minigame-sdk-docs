@@ -5,7 +5,7 @@ description: 游戏先运行，在需要 KOOK 身份和数据时申请用户授�
 
 # 将小游戏接入 KOOK
 
-**发布状态（2026-10-28）：`@kookapp/kook-minigame-sdk@0.1.0-alpha.3` 已发布到 npmjs 的 `next` 标签，支持 `createKookClient` 具名导入，以及 `get_user_info`、`mini_game.context` 两个公开 scope。请按[快速开始](./guide/quick-start.md)固定版本安装。**
+**发布状态（2026-10-28）：npm 已受理 `@kookapp/kook-minigame-sdk@0.1.0-alpha.3` 的发布，目前仍在后台处理，公开 registry 暂未提供下载，`next` 仍指向 `alpha.2`。本文档对应 `alpha.3` 的具名入口和两个公开 scope；待版本可用后，按[快速开始](./guide/quick-start.md)固定版本安装。**
 
 KOOK 小游戏 SDK 连接游戏页面与 KOOK 客户端，提供启动环境、用户授权入口、邀请弹窗、参与者和生命周期能力。游戏页面先运行，在需要 KOOK 身份或数据时申请授权。
 
