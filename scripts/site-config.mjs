@@ -14,5 +14,5 @@ export const pages = [
   ['api/errors.md', '错误处理', '错误码、超时和重试边界'],
   ['guide/checklist.md', '接入检查', '联调与上线前的行为验收'],
   ['guide/migration.md', '迁移与常见问题', '移除 authenticate 和旧字段'],
-  ['releases.md', '版本与支持范围', 'alpha.3 发布处理状态、两个公开 scope 与接入要求'],
+  ['releases.md', '版本与支持范围', '0.1.1 发布状态、两个公开 scope 与接入要求'],
 ]

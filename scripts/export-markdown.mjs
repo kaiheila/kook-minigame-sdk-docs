@@ -5,12 +5,12 @@ import { pages, siteUrl } from './site-config.mjs'
 
 const output = resolve('docs/.vitepress/dist')
 const full = [
-  '# KOOK 小游戏 SDK 完整文档\n\n> @kookapp/kook-minigame-sdk：npm 已受理 0.1.0-alpha.3 的发布，仍在后台处理，暂不可下载；next 仍指向 alpha.2。本文档采用 alpha.3 的 createKookClient 具名入口，公开 scope 为 get_user_info 和 mini_game.context，兼容 profile.basic 别名。更新于 2026-10-28。\n',
+  '# KOOK 小游戏 SDK 完整文档\n\n> @kookapp/kook-minigame-sdk：当前准备版本为 0.1.1，尚未发布，目标标签仍为 next。本文档采用 createKookClient 具名入口，公开 scope 为 get_user_info 和 mini_game.context，兼容 profile.basic 别名。更新于 2026-10-28。\n',
 ]
 const index = [
   '# KOOK 小游戏 SDK',
-  '> KOOK 小游戏 SDK 接入文档：正式包名为 @kookapp/kook-minigame-sdk。npm 已于 2026-10-28 受理 0.1.0-alpha.3 的发布，仍在后台处理，暂不可下载；next 仍指向 alpha.2。本文档使用 alpha.3 的 createKookClient 具名导入。',
-  '待版本可用后固定安装：pnpm add @kookapp/kook-minigame-sdk@0.1.0-alpha.3。公开 scope 为 get_user_info 和 mini_game.context，profile.basic 兼容映射为 get_user_info；默认只申请 get_user_info，可显式追加 mini_game.context。bootstrap 初始数据由 KOOK 客户端直接传入。游戏先运行并完成 ready，再按需通过 session.get 请求 OAuth 授权；前端不调用 authenticate，不传入 OAuth token。游戏后端校验 state、换码并建立自己的登录态。redirect_uri 在开发者后台配置，开发者后台目前仍在开发中。availableScopes 是可申请集合，不是用户同意记录。',
+  '> KOOK 小游戏 SDK 接入文档：正式包名为 @kookapp/kook-minigame-sdk。当前准备版本为 0.1.1，尚未发布，目标标签仍为 next。本文档使用 createKookClient 具名导入。',
+  '待版本发布后固定安装：pnpm add @kookapp/kook-minigame-sdk@0.1.1。公开 scope 为 get_user_info 和 mini_game.context，profile.basic 兼容映射为 get_user_info；默认只申请 get_user_info，可显式追加 mini_game.context。bootstrap 初始数据由 KOOK 客户端直接传入。游戏先运行并完成 ready，再按需通过 session.get 请求 OAuth 授权；前端不调用 authenticate，不传入 OAuth token。游戏后端校验 state、换码并建立自己的登录态。redirect_uri 在开发者后台配置，开发者后台目前仍在开发中。availableScopes 是可申请集合，不是用户同意记录。',
   '## 接入文档',
 ]
 
