@@ -4,14 +4,16 @@
 
 ## 数据查询
 
-| 方法                               | 返回类型                         | scope / 场景                                        |
-| ---------------------------------- | -------------------------------- | --------------------------------------------------- |
-| `social.getFriendsAndDms(input?)`  | `Promise<Page<SocialCandidate>>` | 基础授权 + `friends.dms.read`                       |
-| `channel.getMembers(input?)`       | `Promise<Page<Candidate>>`       | 基础授权 + `channel.members.read`；仅文字或语音频道 |
-| `instance.getParticipants(input?)` | `Promise<Page<Participant>>`     | 基础授权                                            |
-| `officialServer.getStatus()`       | `Promise<OfficialServerStatus>`  | 基础授权                                            |
+| 方法                               | 返回类型                         | scope / 场景                      |
+| ---------------------------------- | -------------------------------- | --------------------------------- |
+| `social.getFriendsAndDms(input?)`  | `Promise<Page<SocialCandidate>>` | `get_user_info`                   |
+| `channel.getMembers(input?)`       | `Promise<Page<Candidate>>`       | `get_user_info`；仅文字或语音频道 |
+| `instance.getParticipants(input?)` | `Promise<Page<Participant>>`     | `get_user_info`                   |
+| `officialServer.getStatus()`       | `Promise<OfficialServerStatus>`  | `get_user_info`                   |
 
 前三个方法的 `input` 为 `{ cursor?: string, limit?: number }`。默认 limit 为 50，最大 100。返回 `{ items, revision, nextCursor }`，`nextCursor: null` 表示结束。查询绑定当前启动上下文，不接受游戏自行指定其他频道、实例、用户或官方服务器 ID。
+
+SDK 同时检查 `get_user_info` 用户授权和对应 capability。授权不保证业务能力可用，宿主仍逐次校验访问权限。
 
 ### 候选人与参与者
 

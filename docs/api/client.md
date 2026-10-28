@@ -44,12 +44,12 @@ const client = createKookClient(bootstrap)
 
 ## session.get(input): Promise&lt;SessionCodeResult&gt;
 
-就绪后按需申请授权并获取短期 code。输入 `state` 为 16–256 字符的无空白事务标识，由游戏后端随机生成并绑定。`scopes` 可选，默认 `['profile.basic']`；必须包含基础 scope 且属于 `availableScopes` 子集。
+就绪后按需申请授权并获取短期 code。输入 `state` 为 16–256 字符的无空白事务标识，由游戏后端随机生成并绑定。唯一 scope 为 `get_user_info`，`scopes` 可选，默认 `['get_user_info']`，且要求该权限属于 `availableScopes`。兼容传入 `profile.basic`，SDK 自动映射为 `get_user_info` 后发送；两个名称同时传入时合并为一个权限。
 
 ```ts
 const result = await client.session.get({
   state: transaction.state,
-  scopes: ['profile.basic', 'friends.dms.read'],
+  scopes: ['get_user_info'],
 })
 if (result.status === 'authorized') {
   // result.code / state / expiresAt / scopes / revision
@@ -59,20 +59,22 @@ if (result.status === 'authorized') {
 }
 ```
 
-| 成功字段    | 说明                                     |
-| ----------- | ---------------------------------------- |
-| `status`    | `authorized`                             |
-| `code`      | 一次性短期授权码，交游戏后端处理         |
-| `state`     | 原样对应请求事务；SDK 与游戏后端都需验证 |
-| `expiresAt` | 授权码过期时间，Unix 毫秒                |
-| `scopes`    | 宿主确认的当前有效授权集合               |
-| `revision`  | 与授权事件共用的递增版本序号             |
+| 成功字段    | 说明                                               |
+| ----------- | -------------------------------------------------- |
+| `status`    | `authorized`                                       |
+| `code`      | 一次性短期授权码，交游戏后端处理                   |
+| `state`     | 原样对应请求事务；SDK 与游戏后端都需验证           |
+| `expiresAt` | 授权码过期时间，Unix 毫秒                          |
+| `scopes`    | 宿主确认的当前有效授权，统一为 `['get_user_info']` |
+| `revision`  | 与授权事件共用的递增版本序号                       |
 
 取消只返回 `{ status: 'cancelled', state }`。取消不清除已有授权。授权弹窗与其他 SDK 弹窗互斥；本地最长等待 120 秒，超时后不会自动重试。
 
 ## hasCapability(name) / hasScope(scope)
 
 均同步返回 `boolean`。不就绪、断线、销毁或终止时返回 `false`。前者判断宿主能力，后者判断当前宿主确认的授权。它们不能替代请求时的服务端检查。
+
+`hasScope('get_user_info')` 与 `hasScope('profile.basic')` 等价。`ready().availableScopes`、`session.get()` 的授权结果和授权事件快照均使用正式名称 `get_user_info`。
 
 ## auth.onStateChanged(listener)
 

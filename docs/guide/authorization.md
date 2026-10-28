@@ -27,7 +27,7 @@
 | `session.get()` 成功 / `auth.onStateChanged` | 宿主确认的当前 SDK 授权 | 游戏后端已经登录成功 |
 | 游戏后端自己的会话                           | 游戏业务身份和登录状态  | KOOK 权限永远有效    |
 
-调用 `session.get()` 时，`scopes` 是 `availableScopes` 的子集，并且包含 `profile.basic`。省略时只申请 `profile.basic`。不要默认申请应用所有权限。
+调用 `session.get()` 时，默认申请唯一 scope `get_user_info`，并且要求它属于 `availableScopes`。`profile.basic` 是兼容别名，SDK 会自动映射为 `get_user_info`；结果和事件中的 scope 统一使用正式名称。
 
 ## 取消、失败与撤销
 
@@ -40,4 +40,4 @@
 
 不需要身份或用户数据的游戏可以只完成 `ready()` 和加载上报。实例生命周期仍由 KOOK 客户端维护，不能把是否调用 OAuth 当作实例是否存在的依据。
 
-平台原生邀请和官方服务器弹窗可以在就绪后调用，是否显示由宿主按当前绑定、用户操作和平台权限决定。读取用户相关数据仍需要相应 scope。
+平台原生邀请和官方服务器弹窗可以在就绪后调用，是否显示由宿主按当前绑定、用户操作和平台权限决定。读取用户相关数据仍需要 `get_user_info` 授权及对应 capability。

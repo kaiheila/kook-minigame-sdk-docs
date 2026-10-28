@@ -72,7 +72,7 @@ export async function login(client: KookClient, backend: GameBackend) {
 ## 4. 按能力和权限调用
 
 ```ts
-if (client.hasCapability('instance.getParticipants') && client.hasScope('profile.basic')) {
+if (client.hasCapability('instance.getParticipants') && client.hasScope('get_user_info')) {
   const page = await client.instance.getParticipants({ limit: 50 })
   console.log(page.items)
 }
