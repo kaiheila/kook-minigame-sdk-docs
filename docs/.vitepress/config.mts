@@ -1,6 +1,6 @@
 import { defineConfig } from 'vitepress'
 
-import { base, sdkVersion, siteUrl, updatedAt } from '../../scripts/site-config.mjs'
+import { base, sdkReleaseStatus, sdkVersion, siteUrl, updatedAt } from '../../scripts/site-config.mjs'
 
 export default defineConfig({
   lang: 'zh-CN',
@@ -46,7 +46,7 @@ export default defineConfig({
           { text: '游戏后端登录', link: '/guide/server-login' },
           { text: '按需查询上下文', link: '/guide/context' },
           { text: '权限与能力', link: '/guide/permissions' },
-          { text: '生命周期与恢复', link: '/guide/lifecycle' },
+          { text: '生命周期、离开与恢复', link: '/guide/lifecycle' },
           { text: '邀请与参与者', link: '/guide/social' },
         ],
       },
@@ -90,6 +90,6 @@ export default defineConfig({
     darkModeSwitchLabel: '外观',
     sidebarMenuLabel: '目录',
     returnToTopLabel: '回到顶部',
-    footer: { message: `${sdkVersion} 已发布 · ${updatedAt}` },
+    footer: { message: `${sdkVersion} ${sdkReleaseStatus} · ${updatedAt}` },
   },
 })

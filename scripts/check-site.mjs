@@ -3,7 +3,7 @@ import { access, readFile, readdir } from 'node:fs/promises'
 import { resolve } from 'node:path'
 
 import { assertPublicText } from './public-content.mjs'
-import { base, pages, sdkVersion, siteUrl, updatedAt } from './site-config.mjs'
+import { base, pages, sdkReleaseStatus, sdkVersion, siteUrl, updatedAt } from './site-config.mjs'
 
 const root = resolve('docs/.vitepress/dist')
 const files = await readdir(root, { recursive: true })
@@ -26,6 +26,12 @@ for (const file of files.filter((name) => /\.(?:html|md|txt)$/.test(name))) {
     await access(resolve(root, path.endsWith('/') ? `${path}index.html` : path)).catch(() => {
       throw new Error(`Missing link: ${file} → ${path}`)
     })
+    if (url.hash && path.endsWith('.html')) {
+      const target = await readFile(resolve(root, path), 'utf8')
+      const id = decodeURIComponent(url.hash.slice(1))
+      const ids = [...target.matchAll(/\bid="([^"]+)"/g)].map((match) => match[1])
+      assert(ids.includes(id), `Missing anchor: ${file} → ${path}#${id}`)
+    }
     links++
   }
 }
@@ -49,6 +55,8 @@ for (const [name, text] of [
     `Stale release metadata: ${name}`
   )
   assert(text.includes('guide/context.md'), `Missing optional context guide: ${name}`)
+  assert(text.includes(sdkReleaseStatus), `Stale SDK release status: ${name}`)
+  assert(text.includes('createKookClient()') && text.includes('lifecycle.leave()'), `Stale SDK integration: ${name}`)
 }
 console.log(
   `Verified ${pages.length} pages and ${links} local links/assets; Markdown discovery and content checks passed.`

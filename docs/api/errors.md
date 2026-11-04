@@ -61,23 +61,26 @@ try {
 
 ## 通信与恢复
 
-| code                                                            | 含义与处理                               |
-| --------------------------------------------------------------- | ---------------------------------------- |
-| `HANDSHAKE_TIMEOUT`、`CONNECTION_FAILED`                        | 连接未建立；核对启动绑定和环境           |
-| `INVALID_SOURCE`                                                | 消息来源不匹配；不放宽 origin 校验       |
-| `UNSUPPORTED_PROTOCOL`、`METHOD_NOT_ALLOWED`                    | 宿主通信协议或方法不匹配                 |
-| `REQUEST_TIMEOUT`                                               | 请求超时；写操作结果可能未知，不自动重放 |
-| `ABORTED`                                                       | 请求因状态变化被取消；按当前状态重新决策 |
-| `CHANNEL_CLOSED`                                                | 通道中断；观察恢复状态                   |
-| `DESTROYED`                                                     | 客户端已销毁；不能复用                   |
-| `HANDLER_ERROR`、`INVALID_MESSAGE`                              | 宿主处理或消息格式异常                   |
-| `RECOVERY_UNSUPPORTED`、`RECOVERY_REJECTED`、`RECOVERY_TIMEOUT` | 当前绑定恢复失败；引导重新打开           |
-| `SERVER_UNREACHABLE`                                            | KOOK 服务链路不可达；观察状态并提示重试  |
+| code                                                            | 含义与处理                                             |
+| --------------------------------------------------------------- | ------------------------------------------------------ |
+| `HANDSHAKE_TIMEOUT`、`CONNECTION_FAILED`                        | 连接未建立；核对启动绑定和环境                         |
+| `BOOTSTRAP_TIMEOUT`                                             | 未及时收到可信启动数据；确认从 KOOK 打开及测试来源配置 |
+| `INVALID_SOURCE`                                                | 消息来源不匹配；不放宽 origin 校验                     |
+| `UNSUPPORTED_PROTOCOL`、`METHOD_NOT_ALLOWED`                    | 宿主通信协议或方法不匹配                               |
+| `REQUEST_TIMEOUT`                                               | 请求超时；写操作结果可能未知，不自动重放               |
+| `ABORTED`                                                       | 请求因状态变化被取消；按当前状态重新决策               |
+| `CHANNEL_CLOSED`                                                | 通道中断；观察恢复状态                                 |
+| `DESTROYED`                                                     | 客户端已销毁；不能复用                                 |
+| `HANDLER_ERROR`、`INVALID_MESSAGE`                              | 宿主处理或消息格式异常                                 |
+| `RECOVERY_UNSUPPORTED`、`RECOVERY_REJECTED`、`RECOVERY_TIMEOUT` | 当前绑定恢复失败；引导重新打开                         |
+| `SERVER_UNREACHABLE`                                            | KOOK 服务链路不可达；观察状态并提示重试                |
 
 ## 超时与重试规则
 
-普通业务请求最长等待 5 秒；授权和原生弹窗最长 120 秒；订阅确认与首次快照共享 5 秒预算。本地最多 16 个待处理业务请求。
+自动启动的数据等待与随后的握手分别默认 10 秒，可各自通过 `bootstrapTimeoutMs/connectionTimeoutMs` 配置为 100–30000 毫秒。可信来源发来错误启动数据时返回 `INVALID_RESPONSE`，需要重新打开游戏；不要放宽来源校验。
 
-只读查询可在确认仍就绪、授权有效后有限重试。授权、邀请、加载上报和后端换码不自动重放；先确认业务结果或让用户明确发起新操作。错误对象不会公开宿主返回的 `retryAfterMs` 或内部追踪信息。
+普通业务请求最长等待 5 秒；`lifecycle.leave()` 最长 10 秒；授权和原生弹窗最长 120 秒；订阅确认与首次快照共享 5 秒预算。本地最多 16 个待处理业务请求。
+
+只读查询可在确认仍就绪、授权有效后有限重试。授权、邀请、加载上报、离开和后端换码不自动重放；先确认业务结果或让用户明确发起新操作。离开失败时不要立即销毁客户端，应在连接仍有效时允许重试；超时或断线的结果可能未知。错误对象不会公开宿主返回的 `retryAfterMs` 或内部追踪信息。
 
 `cancelled` 仅表示正常取消，不是所有错误的统称；邀请复制成功可以返回 `submitted` 且发送人数为零。上下文查询属于游戏后端 HTTP 调用，失败只阻止依赖它的功能，应保留已完成的基础登录，见[上下文错误处理](../guide/context.md#错误与重试)。

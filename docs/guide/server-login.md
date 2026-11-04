@@ -8,7 +8,6 @@ SDK 获取短期授权码，游戏后端校验并换码、读取可信用户身�
 | ------------------------------- | ---------------------------------------------------- |
 | `gameCode`                      | 平台小游戏编号；不要推断等于 OAuth client ID         |
 | OAuth `client_id/client_secret` | 应用凭据，secret 仅后端保存                          |
-| SDK `sessionId/generation`      | 宿主启动绑定，不能作为游戏登录或实例成员资格凭证     |
 | `instanceId`                    | KOOK 承载实例，与游戏房间不是同一个对象              |
 | 游戏 `roomId`                   | 游戏后端定义的房间目标及准入对象                     |
 | 游戏会话                        | 游戏自己的 Cookie／短期内存会话，与 OAuth token 分开 |

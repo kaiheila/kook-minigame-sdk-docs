@@ -91,3 +91,19 @@ type LoadResultInput =
 ```
 
 真实可用后上报 `loaded`。同一绑定重复相同结果合并；冲突结果返回 `STATE_CONFLICT`。失败或断线后不会自动重放写操作。
+
+## lifecycle.leave() {#lifecycle-leave}
+
+SDK 1.2.0 新增，无参数，返回 `Promise<void>`。前置条件为 `ready()` 成功且 `hasCapability('lifecycle.leave')` 为 true，无需 OAuth。
+
+```ts
+if (client.hasCapability('lifecycle.leave')) {
+  await client.lifecycle.leave()
+}
+```
+
+请求只作用于当前 KOOK 游戏，不接收实例、房间、窗口或用户参数。游戏应先完成自己的退房、存档和会话清理；KOOK 确认平台退出后关闭当前承载，并以 `closed/user_exit` 结束生命周期。页面可能卸载，不要依赖调用之后继续执行游戏业务。
+
+同一次退出的并发调用合并，失败后允许用户重试。等待上限为 10 秒；超时或连接中断可能使结果未知，SDK 不会在恢复后自动重放。缺少能力返回 `CAPABILITY_UNAVAILABLE`，尚未 ready 返回 `NOT_READY`；平台临时失败和连接错误按[错误说明](./errors.md)处理。
+
+`client.destroy()` 只清理本地连接与资源，不会主动退出 KOOK 游戏，不能作为离开成功的凭据。

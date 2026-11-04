@@ -1,6 +1,6 @@
 # 权限与能力
 
-更新于 2026-11-04，对应 SDK 0.1.3。区分宿主能力、应用可申请范围和当前用户授权，分别决定功能展示、提示和受保护调用。
+更新于 2026-11-04，对应 SDK 1.2.0 开发版。区分宿主能力、应用可申请范围和当前用户授权，分别决定功能展示、提示和受保护调用。
 
 ## 三类检查
 
@@ -49,6 +49,7 @@ export async function requestGameAuthorization(client: KookClient, state: string
 | `officialServer.getStatus`                                                      | `get_user_info`                                     |
 | `ui.openInviteModal`、`ui.openOfficialServerModal`                              | 不以 OAuth 为前置，宿主校验当前绑定、用户操作及权限 |
 | `lifecycle.reportLoadResult`、`lifecycle.onStateChanged`、`auth.onStateChanged` | ready 且宿主支持                                    |
+| `lifecycle.leave`                                                               | SDK 1.2.0，ready 且宿主支持；无需 OAuth             |
 
 `mini_game.context` 不等于频道成员读取权限。获取授权不会使宿主没有实现的能力自动可用；能力存在也不能代替用户授权。
 

@@ -1,6 +1,8 @@
 # 类型定义
 
-以下为已发布 SDK `0.1.3` 的公开类型快照（2026-11-04），与 SDK 项目的公开声明同步。安装后从 `@kookapp/kook-minigame-sdk` 直接导入，无需复制到项目中。`Scope` 为开放字符串，`SessionCodeInput` 包含可选 `redirectUri`；宿主支持范围仍须按目标环境确认。
+以下为 SDK **1.2.0 开发版**的公开类型快照（2026-11-04），与最新 SDK 源码一致。该版本尚未发布，已发布的 1.1.0 不含 `lifecycle.leave()`。使用对应版本包后直接导入类型，无需复制声明。
+
+新接入优先使用可选的 `KookAutoLaunchOptions`；`KookClientOptions` 用于兼容已有显式绑定。`Scope` 为开放字符串，能力是否可用由当前连接上的 `hasCapability()` 判断。
 
 ```ts
 /** Route binding supplied by the trusted launcher; never an authorization credential. */
@@ -8,6 +10,15 @@ export interface KookClientOptions {
   readonly hostOrigin: string
   readonly sessionId: string
   readonly generation: number
+  readonly connectionTimeoutMs?: number
+}
+
+/** Discover this page's launch binding from its trusted KOOK parent during connect()/ready(). */
+export interface KookAutoLaunchOptions {
+  /** Exact HTTPS origins. Defaults to ['https://www.kookapp.cn']; no wildcard or URL discovery. */
+  readonly allowedHostOrigins?: readonly string[]
+  /** Time to obtain the launch binding, separate from the bridge handshake. Default: 10000 ms. */
+  readonly bootstrapTimeoutMs?: number
   readonly connectionTimeoutMs?: number
 }
 
@@ -59,6 +70,7 @@ export type KookClientErrorCode =
   | 'UNSUPPORTED_ENVIRONMENT'
   | 'DESTROYED'
   | 'HANDSHAKE_TIMEOUT'
+  | 'BOOTSTRAP_TIMEOUT'
   | 'INVALID_SOURCE'
   | 'UNSUPPORTED_PROTOCOL'
   | 'ABORTED'
@@ -91,6 +103,7 @@ export type KookCapability =
   | 'officialServer.getStatus'
   | 'ui.openOfficialServerModal'
   | 'lifecycle.reportLoadResult'
+  | 'lifecycle.leave'
   | 'auth.onStateChanged'
   | 'lifecycle.onStateChanged'
   | 'instance.onParticipantsChanged'
@@ -258,6 +271,8 @@ export interface KookClient {
   }
   readonly lifecycle: {
     readonly reportLoadResult: (input: LoadResultInput) => Promise<void>
+    /** Requests host-managed exit without OAuth. Clean up game resources before calling; the page may unload. */
+    readonly leave: () => Promise<void>
     readonly onStateChanged: (listener: (value: LifecycleSnapshot) => void) => Promise<KookSubscription>
   }
   readonly auth: {
@@ -267,6 +282,6 @@ export interface KookClient {
   readonly destroy: () => void
 }
 
-/** Creates no channel until connect() is called. Safe to import in SSR/bundler tooling. */
-export declare function createKookClient(options: KookClientOptions): KookClient
+/** Creates no listener or channel until connect()/ready(). Explicit bindings remain supported. */
+export declare function createKookClient(options?: KookClientOptions | KookAutoLaunchOptions): KookClient
 ```

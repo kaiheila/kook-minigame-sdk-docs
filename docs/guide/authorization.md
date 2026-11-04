@@ -11,7 +11,7 @@
 图示为需要身份的玩法；欢迎页或游客体验已可用时，加载成功可以先于可选 OAuth 登录上报。
 
 1. 用户在 KOOK 打开游戏；KOOK 完成启动资格校验并创建、维护实例。
-2. KOOK 加载游戏页面，向 iframe 投递 `KOOK_MINI_GAME_BOOTSTRAP`。游戏校验 parent Window、精确 HTTPS origin 和字段；监听晚于 load 时通过 `KOOK_MINI_GAME_BOOTSTRAP_REQUEST` 请求重投，然后创建 SDK 并调用 `ready()`。代码见[快速开始](./quick-start.md#接收宿主启动绑定)。
+2. KOOK 加载游戏页面，游戏直接 `createKookClient()` 并调用 `ready()`；SDK 自动接收、校验启动数据，按需请求重投。游戏无需实现这段通信，代码见[最小连通示例](./quick-start.md#最小连通示例)。
 3. `ready()` 返回实例、环境、能力和 `availableScopes`。游戏可以展示静态内容或无需身份的玩法。
 4. 游戏需要用户身份时，向自己的后端创建带随机 `state` 的登录事务，然后从登录交互调用 `session.get({ state, scopes, redirectUri? })`，回调须与换码配置一致。
 5. KOOK 按需展示 OAuth 权限弹窗。已有有效同意时可能直接返回；取消则返回 `status: 'cancelled'`，页面继续运行。
