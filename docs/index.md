@@ -15,11 +15,20 @@ KOOK 小游戏 SDK 连接游戏页面与 KOOK 客户端，提供启动环境、�
 import { createKookClient } from '@kookapp/kook-minigame-sdk'
 
 const client = createKookClient()
-const environment = await client.ready()
-console.log('KOOK 已连通', environment.instanceId)
+window.addEventListener('pagehide', () => client.destroy(), { once: true })
+
+async function startGame() {
+  const environment = await client.ready()
+  document.body.append('KOOK 已连通：' + environment.instanceId)
+  if (client.hasCapability('lifecycle.reportLoadResult')) {
+    await client.lifecycle.reportLoadResult({ status: 'loaded' })
+  }
+}
+
+startGame().catch(console.error)
 ```
 
-游戏无需复制启动消息监听或重投代码。默认支持正式 KOOK 来源，测试环境按需配置 `allowedHostOrigins`。内容实际可用后再上报加载结果；主动离开见[生命周期说明](./guide/lifecycle.md#主动离开游戏)。
+示例先显示可见内容，再上报加载完成；真实游戏应在自己的内容可用后上报。只调用 `ready()` 而不上报加载结果，当前 KOOK 宿主默认在 60 秒后判定加载失败。游戏无需复制启动消息监听或重投代码，测试环境按需配置 `allowedHostOrigins`；主动离开见[生命周期说明](./guide/lifecycle.md#主动离开游戏)。
 
 <div class="launch-flow" aria-label="接入流程">
   <div class="launch-stage"><span class="launch-title">1. 创建客户端</span><span class="launch-description">调用 createKookClient()，SDK 自动接收并校验启动数据。</span></div>
