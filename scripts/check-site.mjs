@@ -3,7 +3,7 @@ import { access, readFile, readdir } from 'node:fs/promises'
 import { resolve } from 'node:path'
 
 import { assertPublicText } from './public-content.mjs'
-import { base, pages, siteUrl } from './site-config.mjs'
+import { base, pages, sdkVersion, siteUrl, updatedAt } from './site-config.mjs'
 
 const root = resolve('docs/.vitepress/dist')
 const files = await readdir(root, { recursive: true })
@@ -39,6 +39,17 @@ for (const [file] of pages) {
 const llms = await readFile(resolve(root, 'llms.txt'), 'utf8')
 assert(llms.startsWith('# KOOK 小游戏 SDK\n') && llms.includes('> '))
 assert.equal((llms.match(/\.md\)/g) ?? []).length, pages.length)
+const full = await readFile(resolve(root, 'llms-full.txt'), 'utf8')
+for (const [name, text] of [
+  ['llms.txt', llms],
+  ['llms-full.txt', full],
+]) {
+  assert(
+    text.includes(`@kookapp/kook-minigame-sdk@${sdkVersion}`) && text.includes(updatedAt),
+    `Stale release metadata: ${name}`
+  )
+  assert(text.includes('guide/context.md'), `Missing optional context guide: ${name}`)
+}
 console.log(
   `Verified ${pages.length} pages and ${links} local links/assets; Markdown discovery and content checks passed.`
 )

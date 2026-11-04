@@ -1,6 +1,6 @@
 # 类型定义
 
-以下为 SDK `0.1.1` 的公开类型快照（2026-10-28）；该版本尚未发布。版本发布并安装后，可从 `@kookapp/kook-minigame-sdk` 直接导入这些类型，无需复制到项目中。
+以下为已发布 SDK `0.1.3` 的公开类型快照（2026-11-04），与 SDK 项目的公开声明同步。安装后从 `@kookapp/kook-minigame-sdk` 直接导入，无需复制到项目中。`Scope` 为开放字符串，`SessionCodeInput` 包含可选 `redirectUri`；宿主支持范围仍须按目标环境确认。
 
 ```ts
 /** Route binding supplied by the trusted launcher; never an authorization credential. */
@@ -79,8 +79,8 @@ export interface KookClientError extends Error {
   readonly code: KookClientErrorCode
 }
 
-/** Public scopes. profile.basic is a compatibility alias for get_user_info. */
-export type Scope = 'get_user_info' | 'mini_game.context' | 'profile.basic'
+/** OAuth scope token validated by the backend. profile.basic aliases get_user_info. */
+export type Scope = string
 
 /** Implemented optional abilities. Availability still depends on the current host. */
 export type KookCapability =
@@ -108,14 +108,16 @@ export interface ReadyResult {
   readonly platform: 'pc' | 'web'
   readonly capabilities: readonly KookCapability[]
   readonly permissionVersion: string
-  /** Approved scopes the game may request; this is not a user consent record. */
+  /** Host-observed requestable scopes; advisory only, not a user consent record or SDK allowlist. */
   readonly availableScopes: readonly Scope[]
   readonly context: LaunchContext
 }
 
 export interface SessionCodeInput {
   readonly state: string
-  /** Defaults to get_user_info. profile.basic is normalized to get_user_info. */
+  /** Full HTTPS callback registered for this OAuth application. Omit to use the host default. */
+  readonly redirectUri?: string
+  /** Defaults to get_user_info. Explicit scopes need not include it. profile.basic aliases get_user_info. */
   readonly scopes?: readonly Scope[]
 }
 
@@ -264,4 +266,7 @@ export interface KookClient {
   /** Terminal and idempotent; a new launch binding requires a new client instance. */
   readonly destroy: () => void
 }
+
+/** Creates no channel until connect() is called. Safe to import in SSR/bundler tooling. */
+export declare function createKookClient(options: KookClientOptions): KookClient
 ```

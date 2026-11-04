@@ -5,15 +5,23 @@
 ## 上报加载结果
 
 ```ts
-await client.lifecycle.reportLoadResult({ status: 'loaded' })
-// 或者在加载确定失败时：
-await client.lifecycle.reportLoadResult({
-  status: 'failed',
-  reasonCode: 'game_resource_failed',
-})
+import type { KookClient } from '@kookapp/kook-minigame-sdk'
+
+export async function reportGameLoad(client: KookClient, usable: boolean) {
+  if (!client.hasCapability('lifecycle.reportLoadResult')) return
+  if (usable) {
+    await client.lifecycle.reportLoadResult({ status: 'loaded' })
+  } else {
+    await client.lifecycle.reportLoadResult({ status: 'failed', reasonCode: 'game_resource_failed' })
+  }
+}
 ```
 
-两个结果是互斥示例。每个启动绑定只提交一种确定结果；重复相同结果会合并，相反结果返回 `STATE_CONFLICT`。失败原因限于 `game_login_failed`、`game_resource_failed`、`game_initialization_failed`。不要把用户正常取消授权当作资源加载失败。
+按实际可用结果选择一个分支，每次加载尝试只提交一种确定结果；重复相同结果合并，相反结果返回 `STATE_CONFLICT`。失败原因限于 `game_login_failed`、`game_resource_failed`、`game_initialization_failed`。欢迎页或游客玩法已可用时可以先上报成功，不必等待所有可选授权；正常取消授权不属于资源加载失败。
+
+## 生命周期与异常处理
+
+SDK 连接、平台授权、OAuth code／token 和游戏自己的登录态分别维护。授权事件只有 `unauthorized/authorized/revoked`，没有 `expired`；code 到期不使 SDK 授权自动失效。平台结束绑定时，游戏自己的会话、WebSocket 和房间恢复逻辑仍需独立清理。
 
 ## 监听生命周期
 
@@ -61,3 +69,5 @@ stop()
 ## 清理
 
 注销不再使用的事件监听，页面结束时调用 `destroy()`。它会取消待处理请求、清理订阅及定时器，且可以重复调用。
+
+登录或上下文请求在途中结束时还要作废游戏自己的事务，丢弃迟到响应。后端已经创建的会话不能只靠前端抛错清理，见[游戏登录事务](./server-login.md#游戏登录事务与浏览器会话)。

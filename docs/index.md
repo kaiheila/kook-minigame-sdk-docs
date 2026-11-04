@@ -5,7 +5,7 @@ description: 游戏先运行，在需要 KOOK 身份和数据时申请用户授�
 
 # 将小游戏接入 KOOK
 
-**发布状态（2026-10-28）：本文档对应待发布的 `@kookapp/kook-minigame-sdk@0.1.1`，采用 `createKookClient` 具名入口，公开 scope 为 `get_user_info` 和 `mini_game.context`。待版本发布后，按[快速开始](./guide/quick-start.md)固定版本安装。**
+**文档版本：`@kookapp/kook-minigame-sdk@0.1.3`，已发布。更新于 2026-11-04。使用 `createKookClient` 具名入口，OAuth scope 由服务端管理；按[快速开始](./guide/quick-start.md)固定版本安装。SDK 包版本与宿主部署版本分别核对。**
 
 KOOK 小游戏 SDK 连接游戏页面与 KOOK 客户端，提供启动环境、用户授权入口、邀请弹窗、参与者和生命周期能力。游戏页面先运行，在需要 KOOK 身份或数据时申请授权。
 
@@ -19,11 +19,11 @@ KOOK 小游戏 SDK 连接游戏页面与 KOOK 客户端，提供启动环境、�
 
 ## 先了解这三个边界
 
-| 能力                                        | 由谁负责          |
-| ------------------------------------------- | ----------------- |
-| 启动校验、实例绑定、KOOK 原生界面           | KOOK 客户端与平台 |
-| 游戏页面与客户端通信、参数检查、状态事件    | 小游戏 SDK        |
-| 授权码交换、KOOK 凭据保管、游戏账号与登录态 | 游戏后端          |
+| 能力                                                        | 由谁负责          |
+| ----------------------------------------------------------- | ----------------- |
+| 启动校验、实例绑定、KOOK 原生界面                           | KOOK 客户端与平台 |
+| 游戏页面与客户端通信、参数检查、状态事件                    | 小游戏 SDK        |
+| 授权码交换、KOOK 凭据保管、按需上下文查询、游戏账号与登录态 | 游戏后端          |
 
 `ready()` 不代表用户已经授权。`session.get()` 授权成功后可以使用相应 SDK 数据能力，但游戏自己的登录仍由游戏后端完成。前端不向 SDK 提交 OAuth access token。
 
@@ -32,10 +32,11 @@ KOOK 小游戏 SDK 连接游戏页面与 KOOK 客户端，提供启动环境、�
 - 先把页面跑起来：[快速开始](./guide/quick-start.md)、[生命周期](./guide/lifecycle.md)。
 - 需要 KOOK 身份登录：[启动与授权](./guide/authorization.md)、[游戏后端登录](./guide/server-login.md)。
 - 做多人社交：[权限与能力](./guide/permissions.md)、[邀请与参与者](./guide/social.md)。
+- 做频道大厅、核验实例或邀请目标：[按需查询上下文](./guide/context.md)。
 - 已接入旧草案：[迁移说明](./guide/migration.md)。
 
 ## 文档版本
 
-本文档对应 **KOOK 小游戏 SDK 0.1.1**，更新于 **2026-10-28**。可选能力仍需通过运行时检查，实际可用范围取决于 KOOK 客户端支持的能力。[查看发布状态与接入要求](./releases.md)。
+本文档对应 **KOOK 小游戏 SDK 0.1.3**，更新于 **2026-11-04**。开放 scope 不会自动增加 SDK 方法；`availableScopes` 仅供提示，实际授权以结果及事件为准。频道邀请分流、自定义回调和可选能力还取决于目标宿主支持。[查看发布状态与接入要求](./releases.md)。
 
 AI 编程工具可从 [llms.txt](/llms.txt) 读取索引，或使用 [完整 Markdown 文档](/llms-full.txt)。
