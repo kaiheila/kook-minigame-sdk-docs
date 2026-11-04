@@ -1,16 +1,14 @@
 import { mkdir, readFile, writeFile } from 'node:fs/promises'
 import { dirname, resolve } from 'node:path'
 
-import { pages, siteUrl } from './site-config.mjs'
+import { pages, sdkSummary, sdkVersion, siteUrl } from './site-config.mjs'
 
 const output = resolve('docs/.vitepress/dist')
-const full = [
-  '# KOOK 小游戏 SDK 完整文档\n\n> @kookapp/kook-minigame-sdk：当前准备版本为 0.1.1，尚未发布，目标标签仍为 next。本文档采用 createKookClient 具名入口，公开 scope 为 get_user_info 和 mini_game.context，兼容 profile.basic 别名。更新于 2026-10-28。\n',
-]
+const full = [`# KOOK 小游戏 SDK 完整文档\n\n> ${sdkSummary}\n`]
 const index = [
   '# KOOK 小游戏 SDK',
-  '> KOOK 小游戏 SDK 接入文档：正式包名为 @kookapp/kook-minigame-sdk。当前准备版本为 0.1.1，尚未发布，目标标签仍为 next。本文档使用 createKookClient 具名导入。',
-  '待版本发布后固定安装：pnpm add @kookapp/kook-minigame-sdk@0.1.1。公开 scope 为 get_user_info 和 mini_game.context，profile.basic 兼容映射为 get_user_info；默认只申请 get_user_info，可显式追加 mini_game.context。bootstrap 初始数据由 KOOK 客户端直接传入。游戏先运行并完成 ready，再按需通过 session.get 请求 OAuth 授权；前端不调用 authenticate，不传入 OAuth token。游戏后端校验 state、换码并建立自己的登录态。redirect_uri 在开发者后台配置，开发者后台目前仍在开发中。availableScopes 是可申请集合，不是用户同意记录。',
+  `> ${sdkSummary}`,
+  `固定安装：pnpm add --save-exact @kookapp/kook-minigame-sdk@${sdkVersion}。游戏校验 KOOK_MINI_GAME_BOOTSTRAP 消息的 parent Window、精确 HTTPS origin 和字段，监听晚于 load 时可发送 KOOK_MINI_GAME_BOOTSTRAP_REQUEST 请求重投。ready 后展示可用内容并上报加载；需要身份时按需 session.get，由后端核对 state、换码及创建游戏会话。默认申请 get_user_info，显式 scopes 可只含其他合法权限，不要求是 availableScopes 子集；profile.basic 兼容归一化。OAuth token 留在后端。redirectUri 可选，签发与换码值必须一致，允许地址取决于目标宿主及 OAuth 后端。`,
   '## 接入文档',
 ]
 
