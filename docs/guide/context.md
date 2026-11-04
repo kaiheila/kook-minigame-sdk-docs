@@ -24,7 +24,7 @@ Authorization: Bearer 后端持有的OAuthToken
 
 `instance_id` 可以取前端提供的 `ready().instanceId` 作为选择器；平台仍按同一 token 核验用户、游戏及资格。不要因为参数来自 SDK 就直接信任它，也不要把 OAuth token 交给游戏前端或 SDK。
 
-这一步不改变 bootstrap 传入方式，不新增浏览器 `context.get()` 或通用请求 API。平台内部的实名、成年、实例 open／connected／heartbeat／leave 仍由 KOOK 管理，游戏方无需重复接入这些控制流程。
+上下文查询不改变 SDK 的自动启动流程，也不新增浏览器 `context.get()` 或通用请求 API。平台内部的实名、成年及实例维护由 KOOK 管理。游戏需要主动退出时调用 SDK 的 `lifecycle.leave()`，无需直接对接平台生命周期 HTTP 接口。
 
 ## 返回字段与校验
 

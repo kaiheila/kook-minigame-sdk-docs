@@ -8,7 +8,7 @@ const full = [`# KOOK 小游戏 SDK 完整文档\n\n> ${sdkSummary}\n`]
 const index = [
   '# KOOK 小游戏 SDK',
   `> ${sdkSummary}`,
-  `固定安装：pnpm add --save-exact @kookapp/kook-minigame-sdk@${sdkVersion}。游戏校验 KOOK_MINI_GAME_BOOTSTRAP 消息的 parent Window、精确 HTTPS origin 和字段，监听晚于 load 时可发送 KOOK_MINI_GAME_BOOTSTRAP_REQUEST 请求重投。ready 后展示可用内容并上报加载；需要身份时按需 session.get，由后端核对 state、换码及创建游戏会话。默认申请 get_user_info，显式 scopes 可只含其他合法权限，不要求是 availableScopes 子集；profile.basic 兼容归一化。OAuth token 留在后端。redirectUri 可选，签发与换码值必须一致，允许地址取决于目标宿主及 OAuth 后端。`,
+  `本版发布后固定安装：pnpm add --save-exact @kookapp/kook-minigame-sdk@${sdkVersion}；当前联调使用同版验证包。createKookClient() → ready() → 展示可用内容 → reportLoadResult()；启动消息接收、来源校验、重投和清理由 SDK 完成，游戏不再编写宿主接线代码。正式来源默认可信，测试环境配置 allowedHostOrigins。主动退出调用 lifecycle.leave()，要求 ready 与同名 capability，无需 OAuth；先完成游戏自己的退房或存档，失败可重试，断线恢复不自动重放，destroy() 仅清理本地。需要身份时按需 session.get，由游戏后端校验 state、换码并建立自己的会话。OAuth token 留在后端，按需查询上下文。`,
   '## 接入文档',
 ]
 

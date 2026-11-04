@@ -2,26 +2,33 @@
 
 所有公开对象、命名空间和返回快照都是只读的。不要修改返回数据；需要变化时复制到游戏自己的状态对象中。
 
-## createKookClient(options)
+## createKookClient(options?) {#create-client}
 
 ```ts
 import { createKookClient } from '@kookapp/kook-minigame-sdk'
 
-const client = createKookClient(bootstrap)
+const client = createKookClient()
 ```
 
-| 参数                  | 类型      | 说明                                 |
-| --------------------- | --------- | ------------------------------------ |
-| `hostOrigin`          | `string`  | 可信 KOOK 宿主的精确 HTTPS origin    |
-| `sessionId`           | `string`  | 本次启动的通信绑定，非 OAuth 凭据    |
-| `generation`          | `number`  | 非负安全整数，启动代次               |
-| `connectionTimeoutMs` | `number?` | 握手超时，100–30000 毫秒，默认 10000 |
+省略参数时使用自动启动模式。创建客户端不会立即监听或连接；首次 `ready()`／`connect()` 时，SDK 自动接收并校验 KOOK 启动数据，按需请求重投。游戏无需编写宿主通信代码。模块可在 SSR／构建工具中导入，实际连接在 KOOK 的游戏 iframe 内运行。
 
-`bootstrap` 来自 `KOOK_MINI_GAME_BOOTSTRAP` 消息，按[启动绑定示例](../guide/quick-start.md#接收宿主启动绑定)校验 parent Window、精确 HTTPS origin 及字段，监听晚于 load 时请求重投。`connectionTimeoutMs` 是本地可选配置，不是宿主必须下发的字段。创建时保存不可变副本，不会立即建立通道。可以在 SSR 环境导入模块，实际连接需要游戏 iframe。
+自动模式的可选参数为 `KookAutoLaunchOptions`：
+
+| 参数                  | 类型                 | 说明                                                               |
+| --------------------- | -------------------- | ------------------------------------------------------------------ |
+| `allowedHostOrigins`  | `readonly string[]?` | 精确 HTTPS origin，最多 16 项；默认仅信任 `https://www.kookapp.cn` |
+| `bootstrapTimeoutMs`  | `number?`            | 等待启动数据的超时，100–30000 毫秒，默认 10000                     |
+| `connectionTimeoutMs` | `number?`            | 随后的握手超时，100–30000 毫秒，默认 10000                         |
+
+显式来源列表覆盖默认列表，不接受通配符、HTTP、路径、尾斜线或非规范 origin。配置来自游戏的可信环境配置，不从消息、query 或 referrer 获取。SDK 固定接受一组启动绑定；新启动创建新客户端。取得数据、超时、失败或销毁后，SDK 清理临时监听。
+
+### 兼容显式启动绑定
+
+已有集成可继续传入 `KookClientOptions`：`hostOrigin: string`、`sessionId: string`、`generation: number` 和可选 `connectionTimeoutMs`。三个绑定字段必须完整、来自本次可信启动；不能使用用户或实例编号代替。这组参数与自动模式的 `allowedHostOrigins/bootstrapTimeoutMs` 不可混用。新接入优先使用无参数自动模式。
 
 ## connect(): Promise&lt;void&gt;
 
-仅建立与嵌入父窗口的通信。重复并发调用共享连接过程。成功不代表 OAuth 授权，也不代表游戏加载完成。通常直接调用 `ready()` 即可。
+按需等待可信启动数据，然后建立与嵌入父窗口的通信。重复并发调用共享连接过程。成功不代表 OAuth 授权，也不代表游戏加载完成。通常直接调用 `ready()` 即可。
 
 ## ready(): Promise&lt;ReadyResult&gt;
 
@@ -100,6 +107,8 @@ await subscription.unsubscribe()
 - `state`：当前连接状态。
 - `connection`：包含 `state / epoch / monitoring / client / server / recovery / reason` 的只读快照。
 - `onConnectionChanged(listener)`：同步注册并立即回调，返回取消监听函数；最多 32 个本地监听。
-- `destroy()`：同步、终止性且幂等；清理通道、请求、订阅和定时器。
+- `destroy()`：同步、终止性且幂等；取消启动等待，清理通道、请求、订阅和定时器；不会主动退出平台参与或关闭游戏。
+
+主动离开使用 [`lifecycle.leave()`](./business.md#lifecycle-leave)，不要用销毁 SDK 代替游戏退出。
 
 详见 [生命周期与恢复](../guide/lifecycle.md)。

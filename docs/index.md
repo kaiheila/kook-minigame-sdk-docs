@@ -5,13 +5,25 @@ description: 游戏先运行，在需要 KOOK 身份和数据时申请用户授�
 
 # 将小游戏接入 KOOK
 
-**文档版本：`@kookapp/kook-minigame-sdk@0.1.3`，已发布。更新于 2026-11-04。使用 `createKookClient` 具名入口，OAuth scope 由服务端管理；按[快速开始](./guide/quick-start.md)固定版本安装。SDK 包版本与宿主部署版本分别核对。**
+**文档版本：`@kookapp/kook-minigame-sdk@1.2.0` 开发版，尚未发布。更新于 2026-11-04。SDK 自动处理与 KOOK 的启动通信，新增 `lifecycle.leave()`。当前联调使用同版验证包，发布后按[快速开始](./guide/quick-start.md)固定版本安装。**
 
 KOOK 小游戏 SDK 连接游戏页面与 KOOK 客户端，提供启动环境、用户授权入口、邀请弹窗、参与者和生命周期能力。游戏页面先运行，在需要 KOOK 身份或数据时申请授权。
 
+## 最小连通示例
+
+```ts
+import { createKookClient } from '@kookapp/kook-minigame-sdk'
+
+const client = createKookClient()
+const environment = await client.ready()
+console.log('KOOK 已连通', environment.instanceId)
+```
+
+游戏无需复制启动消息监听或重投代码。默认支持正式 KOOK 来源，测试环境按需配置 `allowedHostOrigins`。内容实际可用后再上报加载结果；主动离开见[生命周期说明](./guide/lifecycle.md#主动离开游戏)。
+
 <div class="launch-flow" aria-label="接入流程">
-  <div class="launch-stage"><span class="launch-title">1. 打开游戏</span><span class="launch-description">KOOK 完成启动前校验，创建实例并加载游戏页面。</span></div>
-  <div class="launch-stage"><span class="launch-title">2. 完成 ready</span><span class="launch-description">读取环境与可申请权限，展示游戏。此时不弹出 OAuth 授权。</span></div>
+  <div class="launch-stage"><span class="launch-title">1. 创建客户端</span><span class="launch-description">调用 createKookClient()，SDK 自动接收并校验启动数据。</span></div>
+  <div class="launch-stage"><span class="launch-title">2. 完成 ready</span><span class="launch-description">读取环境，展示可用内容并上报加载；此时不弹出 OAuth 授权。</span></div>
   <div class="launch-stage"><span class="launch-title">3. 按需授权</span><span class="launch-description">游戏发起 session.get，用户同意后由游戏后端换码并建立登录态。</span></div>
 </div>
 
@@ -33,10 +45,11 @@ KOOK 小游戏 SDK 连接游戏页面与 KOOK 客户端，提供启动环境、�
 - 需要 KOOK 身份登录：[启动与授权](./guide/authorization.md)、[游戏后端登录](./guide/server-login.md)。
 - 做多人社交：[权限与能力](./guide/permissions.md)、[邀请与参与者](./guide/social.md)。
 - 做频道大厅、核验实例或邀请目标：[按需查询上下文](./guide/context.md)。
+- 给游戏增加退出按钮：[主动离开游戏](./guide/lifecycle.md#主动离开游戏)，与 SDK 本地销毁分别处理。
 - 已接入旧草案：[迁移说明](./guide/migration.md)。
 
 ## 文档版本
 
-本文档对应 **KOOK 小游戏 SDK 0.1.3**，更新于 **2026-11-04**。开放 scope 不会自动增加 SDK 方法；`availableScopes` 仅供提示，实际授权以结果及事件为准。频道邀请分流、自定义回调和可选能力还取决于目标宿主支持。[查看发布状态与接入要求](./releases.md)。
+本文档对应 **KOOK 小游戏 SDK 1.2.0 开发版**。1.1.0 已支持自动启动；1.2.0 新增离开接口，需 KOOK 同步提供 `lifecycle.leave` capability。开放 scope 不会自动增加 SDK 方法；`availableScopes` 仅供提示，实际授权以结果及事件为准。[查看发布状态与接入要求](./releases.md)。
 
 AI 编程工具可从 [llms.txt](/llms.txt) 读取索引，或使用 [完整 Markdown 文档](/llms-full.txt)。
