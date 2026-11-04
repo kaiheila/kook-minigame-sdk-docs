@@ -24,15 +24,26 @@ pnpm add --save-exact @kookapp/kook-minigame-sdk@1.2.0
 import { createKookClient } from '@kookapp/kook-minigame-sdk'
 
 const client = createKookClient()
-const environment = await client.ready()
-console.log('KOOK 已连通', environment.instanceId)
+window.addEventListener('pagehide', () => client.destroy(), { once: true })
+
+async function startGame() {
+  const environment = await client.ready()
+  document.body.append('KOOK 已连通：' + environment.instanceId)
+  if (client.hasCapability('lifecycle.reportLoadResult')) {
+    await client.lifecycle.reportLoadResult({ status: 'loaded' })
+  }
+}
+
+startGame().catch(console.error)
 ```
 
-输出实例 ID 表示 SDK 已就绪；后续复用这个 `client` 调用所需能力。基础连通不要求 OAuth。测试 KOOK 来源按下文配置 `allowedHostOrigins`。
+示例显示实例 ID 后上报加载完成，卸载时销毁客户端；后续复用这个 `client` 调用所需能力。基础连通不要求 OAuth。使用 `async` 函数兼容 ES2020 构建目标；测试 KOOK 来源按下文配置 `allowedHostOrigins`。
 
 ## 页面加载与清理
 
-连通后，在页面实际可交互时上报加载结果，并在卸载时清理客户端。下面是包含页面提示和清理的完整示例，可替换上面的最小示例；同一次启动复用一个客户端。页面提供 id 为 `app` 的容器：
+最小示例以一段可见文字作为演示页面，真实游戏应在自己的欢迎页或玩法可用后上报 `loaded`。当前 KOOK 宿主默认在 ready 后等待 60 秒加载结果；一直不报告会结束本次连接并显示加载失败。`ready()` 本身不会自动上报。
+
+下面的完整示例增加页面内错误提示，可替换上面的最小示例；同一次启动复用一个客户端。页面提供 id 为 `app` 的容器：
 
 ```ts
 import { createKookClient } from '@kookapp/kook-minigame-sdk'

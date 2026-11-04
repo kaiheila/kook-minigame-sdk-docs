@@ -19,6 +19,8 @@ export async function reportGameLoad(client: KookClient, usable: boolean) {
 
 按实际可用结果选择一个分支，每次加载尝试只提交一种确定结果；重复相同结果合并，相反结果返回 `STATE_CONFLICT`。失败原因限于 `game_login_failed`、`game_resource_failed`、`game_initialization_failed`。欢迎页或游客玩法已可用时可以先上报成功，不必等待所有可选授权；正常取消授权不属于资源加载失败。
 
+`ready()` 只确认 SDK 就绪。当前 KOOK 宿主默认在 ready 后等待 60 秒加载报告；缺少报告会转为加载失败，停止连接并退出平台参与。应及时报告实际结果，不要把日志输出或拿到实例 ID 当作加载已上报。
+
 ## 主动离开游戏
 
 SDK 1.2.0 提供 `client.lifecycle.leave()`，在 ready 后调用，无需 OAuth。退出按钮先完成游戏自己的退房、存档或会话清理，再请求 KOOK 离开当前游戏：
