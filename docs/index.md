@@ -5,7 +5,7 @@ description: 游戏先运行，在需要 KOOK 身份和数据时申请用户授�
 
 # 将小游戏接入 KOOK
 
-**文档版本：`@kookapp/kook-minigame-sdk@1.2.0` 开发版，尚未发布。更新于 2026-11-04。SDK 自动处理与 KOOK 的启动通信，新增 `lifecycle.leave()`。当前联调使用同版验证包，发布后按[快速开始](./guide/quick-start.md)固定版本安装。**
+**文档版本：`@kookapp/kook-minigame-sdk@1.2.0`，已发布。更新于 2026-11-05。SDK 自动处理与 KOOK 的启动通信，新增 `lifecycle.leave()`。按[快速开始](./guide/quick-start.md)固定版本安装。**
 
 KOOK 小游戏 SDK 连接游戏页面与 KOOK 客户端，提供启动环境、用户授权入口、邀请弹窗、参与者和生命周期能力。游戏页面先运行，在需要 KOOK 身份或数据时申请授权。
 
@@ -59,6 +59,6 @@ startGame().catch(console.error)
 
 ## 文档版本
 
-本文档对应 **KOOK 小游戏 SDK 1.2.0 开发版**。1.1.0 已支持自动启动；1.2.0 新增离开接口，需 KOOK 同步提供 `lifecycle.leave` capability。开放 scope 不会自动增加 SDK 方法；`availableScopes` 仅供提示，实际授权以结果及事件为准。[查看发布状态与接入要求](./releases.md)。
+本文档对应 **已发布的 KOOK 小游戏 SDK 1.2.0**。1.1.0 已支持自动启动；1.2.0 新增离开接口，需 KOOK 同步提供 `lifecycle.leave` capability。开放 scope 不会自动增加 SDK 方法；`availableScopes` 仅供提示，实际授权以结果及事件为准。[查看发布状态与接入要求](./releases.md)。
 
 AI 编程工具可从 [llms.txt](/llms.txt) 读取索引，或使用 [完整 Markdown 文档](/llms-full.txt)。

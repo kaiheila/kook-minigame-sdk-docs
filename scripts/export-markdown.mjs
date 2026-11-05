@@ -8,7 +8,7 @@ const full = [`# KOOK 小游戏 SDK 完整文档\n\n> ${sdkSummary}\n`]
 const index = [
   '# KOOK 小游戏 SDK',
   `> ${sdkSummary}`,
-  `本版发布后固定安装：pnpm add --save-exact @kookapp/kook-minigame-sdk@${sdkVersion}；当前联调使用同版验证包。createKookClient() → ready() → 展示可用内容 → reportLoadResult()；启动消息接收、来源校验、重投和清理由 SDK 完成，游戏不再编写宿主接线代码。正式来源默认可信，测试环境配置 allowedHostOrigins。主动退出调用 lifecycle.leave()，要求 ready 与同名 capability，无需 OAuth；先完成游戏自己的退房或存档，失败可重试，断线恢复不自动重放，destroy() 仅清理本地。需要身份时按需 session.get，由游戏后端校验 state、换码并建立自己的会话。OAuth token 留在后端，按需查询上下文。`,
+  `固定安装：pnpm add --save-exact @kookapp/kook-minigame-sdk@${sdkVersion}。createKookClient() → ready() → 展示可用内容 → reportLoadResult()；启动消息接收、来源校验、重投和清理由 SDK 完成，游戏不再编写宿主接线代码。正式来源默认可信，测试环境配置 allowedHostOrigins。主动退出调用 lifecycle.leave()，要求 ready 与同名 capability，无需 OAuth；先完成游戏自己的退房或存档，失败可重试，断线恢复不自动重放，destroy() 仅清理本地。需要身份时按需 session.get，由游戏后端校验 state、换码并建立自己的会话。OAuth token 留在后端，按需查询上下文。`,
   '## 接入文档',
 ]
 
