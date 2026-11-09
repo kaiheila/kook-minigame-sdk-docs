@@ -63,6 +63,70 @@ type CandidateIdentity =
 
 两个原生弹窗都可在 OAuth 授权前调用，宿主负责校验绑定、可见性、用户操作和平台权限；从用户按钮交互触发。它们与授权弹窗互斥，并共用原生业务弹窗的本地 10 秒节流。
 
+## ui.openExternalLink(input) {#ui-open-external-link}
+
+SDK 1.3.0 新增，签名为 `client.ui.openExternalLink(input: ExternalLinkInput): Promise<void>`。要求 ready、前台状态和 `ui.openExternalLink` capability，无需 OAuth；从用户点击帮助、官网等按钮时调用。
+
+```ts
+if (client.hasCapability('ui.openExternalLink')) {
+  await client.ui.openExternalLink({ url: 'https://game.example/help?source=kook#faq' })
+}
+```
+
+```ts
+interface ExternalLinkInput {
+  readonly url: string
+}
+```
+
+- 只接受完整 HTTP/HTTPS 地址；输入和规范化后的 URL 均不超过 2048 字符。
+- 不允许用户名密码、空白／控制字符、反斜杠、相对地址或其他协议。SDK 校验后传递规范化地址。
+- 不接受 `skipRedirect`、窗口配置或其他字段；游戏不能跳过宿主安全检查或借此执行内部路由。
+
+宿主沿用消息列表普通外链的安全跳转流程：允许的目标可直接跳转，风险网站被拦截，其余显示“继续访问”；安全查询失败仍保留原有提示。Web 在隔离的新标签页打开，PC 交给系统浏览器，均不导航当前游戏页面。
+
+Promise 成功只表示宿主已发起打开，不保证浏览器未阻止新标签、用户已确认继续或目标页加载成功。SDK 和宿主绑定分别限制每秒一次；普通请求上限为 5 秒，超时或恢复后不会自动重放，避免重复开页。
+
+| 错误                                    | 处理                                           |
+| --------------------------------------- | ---------------------------------------------- |
+| `INVALID_ARGUMENT`／`PAYLOAD_TOO_LARGE` | 修正 URL、长度或额外参数后再提交               |
+| `CAPABILITY_UNAVAILABLE`                | 当前宿主不支持，隐藏或禁用按钮                 |
+| `NOT_FOREGROUND`                        | 回到游戏前台后由用户重试                       |
+| `RATE_LIMITED`                          | 至少间隔一秒，避免连续提交                     |
+| `REQUEST_TIMEOUT`／连接错误             | 结果可能未知，先查看是否已打开，再决定是否重试 |
+
+## ui.requestFullscreen() {#ui-request-fullscreen}
+
+SDK 1.3.0 新增，无参数，返回 `Promise<void>`。要求 ready、前台状态和 `ui.requestFullscreen` capability，无需 OAuth；直接在用户点击处理函数中调用，请求前不要先等待网络、定时器或其他异步工作。
+
+```ts
+const fullscreenButton = document.querySelector<HTMLButtonElement>('#fullscreen')
+fullscreenButton?.addEventListener('click', async () => {
+  if (!client.hasCapability('ui.requestFullscreen')) return
+  try {
+    await client.ui.requestFullscreen()
+  } catch (error) {
+    console.error('请求全屏失败', error)
+  }
+})
+```
+
+整个当前游戏承载区进入全屏，与宿主全屏按钮共用状态和布局处理。内嵌／小窗保留游戏页面，独立窗口仅全屏自身承载，不全屏源页面占位，也不重开游戏。成功应答在浏览器全屏完成并同步宿主状态后返回；失败不提前标记全屏。
+
+并发请求合并，当前承载已全屏时重复请求幂等，不解释为取消。取消仍使用 Esc 或宿主“取消全屏”，按宿主原有布局和路由规则恢复。接口不接收 DOM、选择器、窗口或 options 参数，也不提供游戏侧取消全屏方法。
+
+普通请求上限为 5 秒，恢复后不自动重放。超时或会话切换后的迟到结果不能改写新游戏状态；需要再次操作时由用户重新点击。
+
+| 错误                     | 处理                                       |
+| ------------------------ | ------------------------------------------ |
+| `CAPABILITY_UNAVAILABLE` | 旧宿主或当前承载不支持，隐藏或禁用按钮     |
+| `USER_GESTURE_REQUIRED`  | 直接从用户点击发起，移除调用前的异步等待   |
+| `NOT_FOREGROUND`         | 回到当前游戏前台再点击                     |
+| `MODAL_BUSY`             | 等待授权、邀请等宿主弹框结束               |
+| `PERMISSION_DENIED`      | 浏览器拒绝；保留宿主全屏按钮或允许用户重试 |
+| `STATE_CONFLICT`         | 其他内容正在全屏，先退出该全屏             |
+| `INVALID_ARGUMENT`       | 不传任何参数                               |
+
 ## 事件
 
 ### instance.onParticipantsChanged(listener)

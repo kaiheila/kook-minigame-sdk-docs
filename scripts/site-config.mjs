@@ -1,9 +1,9 @@
 export const base = '/kook-minigame-sdk-docs/'
 export const siteUrl = `https://kaiheila.github.io${base}`
-export const sdkVersion = '1.2.0'
+export const sdkVersion = '1.3.0'
 export const sdkReleaseStatus = '已发布'
-export const updatedAt = '2026-11-05'
-export const sdkSummary = `@kookapp/kook-minigame-sdk@${sdkVersion}（${sdkReleaseStatus}）。游戏直接 createKookClient() → ready()，SDK 内置启动数据接收、校验和重投。新增 lifecycle.leave()，ready 后检查同名 capability 即可请求离开，无需 OAuth；destroy() 只清理本地资源。Scope 由服务端管理，availableScopes 仅供提示；上下文按玩法从游戏后端查询。更新于 ${updatedAt}。`
+export const updatedAt = '2026-11-09'
+export const sdkSummary = `@kookapp/kook-minigame-sdk@${sdkVersion}（${sdkReleaseStatus}）。游戏直接 createKookClient() → ready()，SDK 内置启动数据接收、校验和重投。新增 ui.openExternalLink() 和 ui.requestFullscreen()：ready 后检查各自 capability，直接从前台用户点击触发，无需 OAuth。外链保留 KOOK 消息跳转提示与风险检查，全屏复用当前游戏的宿主承载，重复请求保持全屏。主动离开使用 lifecycle.leave()；destroy() 只清理本地资源。Scope 由服务端管理，availableScopes 仅供提示；上下文按玩法从游戏后端查询。更新于 ${updatedAt}。`
 export const pages = [
   ['index.md', '概览', 'SDK 的职责与接入路径'],
   ['guide/quick-start.md', '快速开始', '正式包名、版本选择与接入流程'],
@@ -14,10 +14,10 @@ export const pages = [
   ['guide/lifecycle.md', '生命周期、离开与恢复', '加载上报、主动离开、连接变化与资源清理'],
   ['guide/social.md', '邀请与参与者', '原生弹窗、候选身份、分页与参与者变化'],
   ['api/client.md', '客户端与授权 API', '创建、ready、session.get 与授权事件'],
-  ['api/business.md', '业务 API', '社交、频道、实例、官方服务器及生命周期'],
+  ['api/business.md', '业务 API', '社交、频道、实例、外链、全屏及生命周期'],
   ['api/types.md', '类型定义', '公开 TypeScript 类型'],
   ['api/errors.md', '错误处理', '错误码、超时和重试边界'],
   ['guide/checklist.md', '接入检查', '联调与上线前的行为验收'],
-  ['guide/migration.md', '迁移与常见问题', '移除游戏启动接线代码、接入 leave 与兼容旧版本'],
-  ['releases.md', '版本与支持范围', '1.2.0 已发布、自动启动及可选离开能力'],
+  ['guide/migration.md', '迁移与常见问题', '升级 1.3.0、外链／全屏／离开及旧宿主兼容'],
+  ['releases.md', '版本与支持范围', '1.3.0 已发布、新增外链和请求全屏能力'],
 ]

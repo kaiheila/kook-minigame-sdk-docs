@@ -1,14 +1,21 @@
 # 版本与支持范围
 
-## 当前文档版本：1.2.0
+## 当前文档版本：1.3.0
 
-本文档对应已发布的 SDK `1.2.0`，更新于 2026-11-05。固定安装并提交锁文件：
+本文档对应已发布的 SDK `1.3.0`，更新于 2026-11-09。固定安装并提交锁文件：
 
 ```sh
-pnpm add --save-exact @kookapp/kook-minigame-sdk@1.2.0
+pnpm add --save-exact @kookapp/kook-minigame-sdk@1.3.0
 ```
 
 ESM 使用具名导入 `import { createKookClient } from '@kookapp/kook-minigame-sdk'`，CommonJS 从 `require(...)` 解构同名成员。更早版本的入口及权限行为可能不同，升级时对照[迁移指南](./guide/migration.md)。
+
+## 1.3.0 新增外链和全屏
+
+- `client.ui.openExternalLink({ url }): Promise<void>` 打开完整 HTTP/HTTPS 外链，保留 KOOK 消息外链的跳转提示和风险检查，不改变当前游戏地址。
+- `client.ui.requestFullscreen(): Promise<void>` 请求当前宿主游戏承载全屏，与宿主按钮共用状态处理；重复请求保持全屏，取消使用 Esc 或宿主按钮。
+- 两者在 ready 后可用，无需 OAuth；须从前台用户点击触发，先检查各自 capability。普通请求上限为 5 秒，连接恢复后不自动重放。
+- 1.2.0 不含这两个方法。旧宿主可能未声明新能力，不能仅凭 npm 包版本假定可用。参数、成功含义和错误处理见[打开外链](./api/business.md#ui-open-external-link)与[请求全屏](./api/business.md#ui-request-fullscreen)。
 
 ## 1.2.0 新增主动离开
 
@@ -40,12 +47,16 @@ ESM 使用具名导入 `import { createKookClient } from '@kookapp/kook-minigame
 | 社交、频道和参与者查询           | 目标宿主声明对应 capability，并取得当前所需授权                                                   |
 | 断线恢复                         | 目标宿主提供有效恢复许可并确认原关系；SDK 本身不保留平台参与关系                                  |
 | 游戏主动离开                     | SDK 1.2.0，且 KOOK 声明 `lifecycle.leave` capability；仅销毁 SDK 不会主动退出游戏                 |
+| 打开外链                         | SDK 1.3.0，KOOK 声明 `ui.openExternalLink`；保留消息外链安全流程                                  |
+| 请求宿主全屏                     | SDK 1.3.0，KOOK 声明 `ui.requestFullscreen`；从前台用户点击发起                                   |
 
 包发布不等于平台能力已在所有环境上线。真实验收分别记录 SDK 版本、宿主版本、环境和场景，不把模拟结果当作真实账号投递成功。
 
+1.3.0 的外链和全屏还要求目标 KOOK 分别声明 `ui.openExternalLink`、`ui.requestFullscreen` capability。两者都不要求用户授权；浏览器手势、前台状态、宿主弹框及风险规则仍可能阻止本次操作。
+
 ## 支持范围
 
-当前源码覆盖 PC/Web 的自动启动、ready、授权码入口、本地能力及授权检查、候选与参与者查询、原生邀请及官方服务器弹框、加载上报、主动离开、固定事件和受控恢复。可选能力以目标宿主实际声明及行为为准。
+当前源码覆盖 PC/Web 的自动启动、ready、授权码入口、本地能力及授权检查、候选与参与者查询、原生邀请及官方服务器弹框、加载上报、主动离开、外链安全跳转、请求宿主全屏、固定事件和受控恢复。可选能力以目标宿主实际声明及行为为准。
 
 发布包提供 ESM、CJS、浏览器全局构建及 TypeScript 类型，使用 ES2020 原生能力，不内置 polyfill。Node.js 版本要求针对开发工具；游戏及其依赖仍需在目标 KOOK 环境验证浏览器兼容性。
 

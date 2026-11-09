@@ -1,6 +1,16 @@
 # 迁移与常见问题
 
-本文对应已发布的 1.2.0。基础启动继续使用“先开游戏，后授权”；从旧版升级时更新 SDK 调用及业务状态判断，无需自行实现与 KOOK 的通信。
+本文对应已发布的 1.3.0。基础启动继续使用“先开游戏，后授权”；从旧版升级时更新 SDK 调用及业务状态判断，无需自行实现与 KOOK 的通信。
+
+## 从 1.2.0 升级到 1.3.0
+
+固定安装 `@kookapp/kook-minigame-sdk@1.3.0` 并提交锁文件，按玩法增加两个可选 API：
+
+- 帮助／官网等外链按钮使用 `client.ui.openExternalLink({ url })`；由宿主保留消息外链安全跳转，不增加跳过检查的参数。
+- 全屏按钮直接调用 `client.ui.requestFullscreen()`；不要先等待其他异步操作，成功后按宿主全屏表现使用，取消通过 Esc 或宿主按钮。
+- 分别检查同名 capability，不因 SDK 升级就假定旧宿主已经支持；无需 OAuth，处理前台、浏览器手势及失败重试。
+
+已有初始化、授权、邀请和 `lifecycle.leave()` 调用保持兼容，新增 API 不要求改变游戏后端。详见[打开外链](../api/business.md#ui-open-external-link)、[请求全屏](../api/business.md#ui-request-fullscreen)和[类型定义](../api/types.md)。
 
 ## 迁移到 1.2.0
 

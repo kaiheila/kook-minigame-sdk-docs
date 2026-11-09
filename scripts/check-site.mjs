@@ -57,6 +57,10 @@ for (const [name, text] of [
   assert(text.includes('guide/context.md'), `Missing optional context guide: ${name}`)
   assert(text.includes(sdkReleaseStatus), `Stale SDK release status: ${name}`)
   assert(text.includes('createKookClient()') && text.includes('lifecycle.leave()'), `Stale SDK integration: ${name}`)
+  assert(
+    text.includes('ui.openExternalLink(') && text.includes('ui.requestFullscreen()'),
+    `Missing SDK 1.3.0 APIs: ${name}`
+  )
 }
 console.log(
   `Verified ${pages.length} pages and ${links} local links/assets; Markdown discovery and content checks passed.`

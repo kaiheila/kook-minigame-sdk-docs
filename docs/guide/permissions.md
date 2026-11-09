@@ -1,6 +1,6 @@
 # 权限与能力
 
-更新于 2026-11-05，对应已发布 SDK 1.2.0。区分宿主能力、应用可申请范围和当前用户授权，分别决定功能展示、提示和受保护调用。
+更新于 2026-11-09，对应已发布 SDK 1.3.0。区分宿主能力、应用可申请范围和当前用户授权，分别决定功能展示、提示和受保护调用。
 
 ## 三类检查
 
@@ -41,15 +41,19 @@ export async function requestGameAuthorization(client: KookClient, state: string
 
 ## capability 与当前查询要求
 
-| 能力                                                                            | 前置授权／场景                                      |
-| ------------------------------------------------------------------------------- | --------------------------------------------------- |
-| `social.getFriendsAndDms`                                                       | `get_user_info`                                     |
-| `channel.getMembers`                                                            | `get_user_info`；当前打开位置是文字／语音频道       |
-| `instance.getParticipants`、`instance.onParticipantsChanged`                    | `get_user_info`                                     |
-| `officialServer.getStatus`                                                      | `get_user_info`                                     |
-| `ui.openInviteModal`、`ui.openOfficialServerModal`                              | 不以 OAuth 为前置，宿主校验当前绑定、用户操作及权限 |
-| `lifecycle.reportLoadResult`、`lifecycle.onStateChanged`、`auth.onStateChanged` | ready 且宿主支持                                    |
-| `lifecycle.leave`                                                               | SDK 1.2.0，ready 且宿主支持；无需 OAuth             |
+| 能力                                                                            | 前置授权／场景                                       |
+| ------------------------------------------------------------------------------- | ---------------------------------------------------- |
+| `social.getFriendsAndDms`                                                       | `get_user_info`                                      |
+| `channel.getMembers`                                                            | `get_user_info`；当前打开位置是文字／语音频道        |
+| `instance.getParticipants`、`instance.onParticipantsChanged`                    | `get_user_info`                                      |
+| `officialServer.getStatus`                                                      | `get_user_info`                                      |
+| `ui.openInviteModal`、`ui.openOfficialServerModal`                              | 不以 OAuth 为前置，宿主校验当前绑定、用户操作及权限  |
+| `lifecycle.reportLoadResult`、`lifecycle.onStateChanged`、`auth.onStateChanged` | ready 且宿主支持                                     |
+| `lifecycle.leave`                                                               | SDK 1.2.0，ready 且宿主支持；无需 OAuth              |
+| `ui.openExternalLink`                                                           | SDK 1.3.0，ready、宿主支持及前台用户点击；无需 OAuth |
+| `ui.requestFullscreen`                                                          | SDK 1.3.0，ready、宿主支持及前台用户点击；无需 OAuth |
+
+`ui.openExternalLink` 和 `ui.requestFullscreen` 从 SDK 1.3.0 提供，均要求 ready、对应 capability 与前台用户点击，无需 OAuth。外链每秒限一次并保留宿主安全跳转；全屏还受瞬时用户激活和宿主弹框状态约束。详见[外链](../api/business.md#ui-open-external-link)与[全屏](../api/business.md#ui-request-fullscreen)。
 
 `mini_game.context` 不等于频道成员读取权限。获取授权不会使宿主没有实现的能力自动可用；能力存在也不能代替用户授权。
 

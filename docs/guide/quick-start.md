@@ -1,6 +1,6 @@
 # 快速开始
 
-更新：2026-11-05，对应已发布 SDK **1.2.0**。游戏直接调用 SDK；启动数据接收、来源校验、重投和清理均由 SDK 完成，无需编写消息监听或下载启动适配文件。
+更新：2026-11-09，对应已发布 SDK **1.3.0**。游戏直接调用 SDK；启动数据接收、来源校验、重投和清理均由 SDK 完成，无需编写消息监听或下载启动适配文件。
 
 ## 接入前准备
 
@@ -8,13 +8,13 @@
 - 正式环境默认信任 `https://www.kookapp.cn`；测试环境才需要配置平台提供的精确 HTTPS origin。
 - 需要身份或存档时，再准备 OAuth 应用和游戏后端；无需登录的玩法可先完成基础接入。
 
-SDK 1.2.0 已发布，固定安装并提交锁文件：
+SDK 1.3.0 已发布，固定安装并提交锁文件：
 
 ```sh
-pnpm add --save-exact @kookapp/kook-minigame-sdk@1.2.0
+pnpm add --save-exact @kookapp/kook-minigame-sdk@1.3.0
 ```
 
-已发布的 1.1.0 支持自动启动，但不包含 `lifecycle.leave()`。版本及能力差异见[版本说明](../releases.md)。SDK 包已包含通信实现，无需单独安装 bridge 或克隆 SDK 项目。ESM 使用具名导入；CommonJS 从 `require(...)` 解构 `createKookClient`；无打包器时使用 `window.KOOKMiniGame.createKookClient`。
+已发布的 1.1.0 支持自动启动，1.2.0 新增 `lifecycle.leave()`；打开外链和请求全屏从 1.3.0 提供，还需宿主声明对应 capability。版本及能力差异见[版本说明](../releases.md)。SDK 包已包含通信实现，无需单独安装 bridge 或克隆 SDK 项目。ESM 使用具名导入；CommonJS 从 `require(...)` 解构 `createKookClient`；无打包器时使用 `window.KOOKMiniGame.createKookClient`。
 
 ## 最小连通示例
 
@@ -131,6 +131,36 @@ async function inviteFromGame(client: KookClient, roomId?: string): Promise<stri
 ```
 
 此函数需要使用已完成 `ready()` 的客户端。频道、私信、指定房间和复制结果的完整规则见[邀请目标与结果](./social.md#邀请目标与结果)；旧宿主是否支持频道分流须按部署版本验证。
+
+## 打开外链与请求全屏
+
+在 `ready()` 完成后，将游戏按钮接入这两个可选能力：
+
+```ts
+const helpButton = document.querySelector<HTMLButtonElement>('#help')
+helpButton?.addEventListener('click', async () => {
+  if (!client.hasCapability('ui.openExternalLink')) return
+  try {
+    await client.ui.openExternalLink({ url: 'https://game.example/help' })
+  } catch (error) {
+    console.error('打开外链失败', error)
+  }
+})
+
+const fullscreenButton = document.querySelector<HTMLButtonElement>('#fullscreen')
+fullscreenButton?.addEventListener('click', async () => {
+  if (!client.hasCapability('ui.requestFullscreen')) return
+  try {
+    await client.ui.requestFullscreen()
+  } catch (error) {
+    console.error('请求全屏失败', error)
+  }
+})
+```
+
+无需 OAuth。全屏请求前不要等待网络或定时器，以免丢失瞬时用户激活；当前游戏承载已全屏时重复请求不会取消，Esc 或宿主按钮沿用原恢复方式。外链继续通过 KOOK 消息外链的安全跳转流程，成功只表示宿主已发起打开，不表示目标网站加载成功。
+
+正式界面在能力缺失时隐藏或禁用按钮，并把错误转换为可理解的提示。详细规则见[打开外链](../api/business.md#ui-open-external-link)与[请求全屏](../api/business.md#ui-request-fullscreen)。
 
 ## 主动离开游戏
 
