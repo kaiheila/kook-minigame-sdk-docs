@@ -1,6 +1,6 @@
 # 类型定义
 
-以下为已发布 SDK **1.3.0** 的公开类型快照（2026-11-09），同步自 npm 包的公开声明。1.2.0 不含 `ui.openExternalLink()` 和 `ui.requestFullscreen()`；1.1.0 不含 `lifecycle.leave()`。使用对应版本包后直接导入类型，无需复制声明。
+以下为 SDK **1.3.1** 的公开类型快照（2026-11-11），与该版本 SDK 的公开声明一致。`allowedHostOrigins` 在自动模式追加到默认来源并去重，完整显式绑定保持原有行为；没有新增方法签名。1.2.0 不含 `ui.openExternalLink()` 和 `ui.requestFullscreen()`；1.1.0 不含 `lifecycle.leave()`。使用对应版本包后直接导入类型，无需复制声明。
 
 新接入优先使用可选的 `KookAutoLaunchOptions`；`KookClientOptions` 用于兼容已有显式绑定。`Scope` 为开放字符串，能力是否可用由当前连接上的 `hasCapability()` 判断。
 
@@ -14,7 +14,7 @@ export interface KookClientOptions {
 }
 /** Discover this page's launch binding from its trusted KOOK parent during connect()/ready(). */
 export interface KookAutoLaunchOptions {
-  /** Exact HTTPS origins. Defaults to ['https://www.kookapp.cn']; no wildcard or URL discovery. */
+  /** Additional exact HTTPS origins, merged with https://www.kookapp.cn and deduplicated; no wildcard or URL discovery. */
   readonly allowedHostOrigins?: readonly string[]
   /** Time to obtain the launch binding, separate from the bridge handshake. Default: 10000 ms. */
   readonly bootstrapTimeoutMs?: number

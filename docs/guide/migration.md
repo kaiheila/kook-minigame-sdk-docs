@@ -1,6 +1,22 @@
 # 迁移与常见问题
 
-本文对应已发布的 1.3.0。基础启动继续使用“先开游戏，后授权”；从旧版升级时更新 SDK 调用及业务状态判断，无需自行实现与 KOOK 的通信。
+本文对应已发布的 1.3.1。基础启动继续使用“先开游戏，后授权”；从旧版升级时更新 SDK 调用及业务状态判断，无需自行实现与 KOOK 的通信。
+
+## 从 1.3.0 升级到 1.3.1 {#upgrade-1-3-1}
+
+固定安装 `@kookapp/kook-minigame-sdk@1.3.1` 并提交锁文件。自动模式的 `allowedHostOrigins` 从覆盖默认列表改为与默认来源合并、去重，始终保留 `https://www.kookapp.cn`：
+
+```ts
+const client = createKookClient({
+  allowedHostOrigins: ['https://localhost:3000'],
+})
+// 实际信任 https://www.kookapp.cn 和 https://localhost:3000。
+await client.ready()
+```
+
+打包 PC 的正式和测试环境均可能使用默认 HTTPS 父页面，因此保留它可兼容两种环境。游戏自己的来源过滤也应同步；追加列表仍非空且最多 16 项。完整显式绑定只使用其 `hostOrigin`，行为不变。
+
+现有 API 调用保持兼容。更新依赖和锁文件后重新构建、发布游戏前端。
 
 ## 从 1.2.0 升级到 1.3.0
 
@@ -8,7 +24,7 @@
 
 - 帮助／官网等外链按钮使用 `client.ui.openExternalLink({ url })`；由宿主保留消息外链安全跳转，不增加跳过检查的参数。
 - 全屏按钮直接调用 `client.ui.requestFullscreen()`；不要先等待其他异步操作，成功后按宿主全屏表现使用，取消通过 Esc 或宿主按钮。
-- 分别检查同名 capability，不因 SDK 升级就假定旧宿主已经支持；无需 OAuth，处理前台、浏览器手势及失败重试。
+- 分别检查同名 capability，并处理前台、用户点击及失败重试。
 
 已有初始化、授权、邀请和 `lifecycle.leave()` 调用保持兼容，新增 API 不要求改变游戏后端。详见[打开外链](../api/business.md#ui-open-external-link)、[请求全屏](../api/business.md#ui-request-fullscreen)和[类型定义](../api/types.md)。
 

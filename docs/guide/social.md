@@ -4,7 +4,7 @@
 
 ## 邀请目标与结果
 
-从用户点击邀请按钮的交互调用。参数 `roomId` 可省略；传入时只允许字母、数字、下划线和连字符，长度 1–128。游戏不能传接收人、频道 ID、正文、邀请类型或任意 URL。
+在 ready 后从邀请按钮点击调用。可选参数 `roomId` 只允许字母、数字、下划线和连字符，长度 1–128。
 
 | 打开上下文           | 调用                             | 目标                                                                                 |
 | -------------------- | -------------------------------- | ------------------------------------------------------------------------------------ |
@@ -12,7 +12,7 @@
 | 任意支持邀请的上下文 | `ui.openInviteModal({ roomId })` | 当前实例的固定邀请，携带游戏房间目标，游戏后端校验准入                               |
 | 普通／游戏应用私信   | `ui.openInviteModal()`           | 当前实例的固定邀请，不指定游戏房间，由游戏安排首页／大厅                             |
 
-由游戏按玩法选择是否传 `roomId`。频道缺少邀请权限时明确拒绝，不静默回退私信。频道链接的时长／次数由原生弹框管理，固定实例邀请期限由平台管理。旧宿主可能尚未实现不带 roomId 的频道分流；相同 capability 不能保证该行为，接入目标环境时需核对部署版本。
+需要受邀玩家直接加入游戏房间时传 `roomId`。旧宿主的频道分流行为需在目标环境验证。
 
 ```ts
 import type { KookClient } from '@kookapp/kook-minigame-sdk'
@@ -31,13 +31,13 @@ export async function inviteFriends(client: KookClient, roomId?: string): Promis
 }
 ```
 
-函数使用已完成 ready 的客户端。`cancelled` 时两项计数均为 0；成功复制链接也返回 `submitted`，不增加人数，因此 `submitted` 且两项人数为 0 可以表示复制成功。仅生成链接不算提交，`submitted` 也不代表对方已接受或入房。
+`cancelled` 表示用户取消；`submitted` 且两项计数均为 0 可表示链接复制成功。部分失败显示真实计数；请求失败进入 catch。接收端处理见[上下文与入房](./context.md#邀请目标与房间准入)。
 
-用户关闭弹框后返回聚合结果。部分失败展示真实计数；全部失败时可能返回失败计数或 reject，不能提示成功。超时、绑定失效和退出也可能 reject，不一律解释为取消。SDK 不返回邀请链接、邀请码或收件人明细；处理接收端目标见[上下文与入房](./context.md#邀请目标与房间准入)。
-
-授权、邀请和官方服务器弹框互斥，原生业务弹框共用 10 秒本地节流，取消也计入。不要自动重弹或重发超时的邀请。
+弹窗共用 10 秒调用间隔，取消也计入；超时后由用户决定是否重试。
 
 ## 分页读取候选人与参与者
+
+需先取得 `get_user_info` OAuth 授权：
 
 ```ts
 import type { KookClient } from '@kookapp/kook-minigame-sdk'
@@ -55,10 +55,10 @@ export async function readFirstParticipants(client: KookClient) {
 
 ## 监听名单变化
 
-`instance.onParticipantsChanged()` 返回异步订阅句柄，首个快照建立后再读取分页。事件只携带 revision，不携带完整名单；SDK 会拒绝落后于已观察通知的分页结果，以 `SNAPSHOT_EXPIRED` 提醒重新读取。
+先取得 `get_user_info` OAuth 授权。`instance.onParticipantsChanged()` 返回异步订阅句柄，回调收到 revision 后重新读取名单；`SNAPSHOT_EXPIRED` 时从第一页重取。
 
 业务结束时调用 `await handle.unsubscribe()`。合并频繁刷新，处理每个异步读取的拒绝，避免旧绑定的迟到响应写回新页面。
 
 ## 官方服务器
 
-`officialServer.getStatus()` 读取配置及用户加入状态，需要基础授权和 capability。`ui.openOfficialServerModal()` 打开原生界面，不以 OAuth 为前置，由宿主校验并处理加入操作。按返回的 `opened/joined/pending/cancelled` 判断结果，不把弹框打开当成已加入，不自行拼接平台路由。
+`officialServer.getStatus()` 读取配置和用户加入状态，需先取得 `get_user_info` OAuth 授权。`ui.openOfficialServerModal()` 打开原生界面，按返回的 `opened / joined / pending / cancelled` 更新状态。

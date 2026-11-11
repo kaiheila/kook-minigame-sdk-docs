@@ -1,9 +1,9 @@
 export const base = '/kook-minigame-sdk-docs/'
 export const siteUrl = `https://kaiheila.github.io${base}`
-export const sdkVersion = '1.3.0'
+export const sdkVersion = '1.3.1'
 export const sdkReleaseStatus = '已发布'
-export const updatedAt = '2026-11-09'
-export const sdkSummary = `@kookapp/kook-minigame-sdk@${sdkVersion}（${sdkReleaseStatus}）。游戏直接 createKookClient() → ready()，SDK 内置启动数据接收、校验和重投。新增 ui.openExternalLink() 和 ui.requestFullscreen()：ready 后检查各自 capability，直接从前台用户点击触发，无需 OAuth。外链保留 KOOK 消息跳转提示与风险检查，全屏复用当前游戏的宿主承载，重复请求保持全屏。主动离开使用 lifecycle.leave()；destroy() 只清理本地资源。Scope 由服务端管理，availableScopes 仅供提示；上下文按玩法从游戏后端查询。更新于 ${updatedAt}。`
+export const updatedAt = '2026-11-11'
+export const sdkSummary = `@kookapp/kook-minigame-sdk@${sdkVersion}（${sdkReleaseStatus}），更新于 ${updatedAt}。createKookClient() → ready() → 展示游戏 → reportLoadResult()。自动模式的 allowedHostOrigins 与默认来源合并、去重，保留 https://www.kookapp.cn；追加列表非空且最多 16 项。可选方法先检查 capability；用户数据查询先取得 get_user_info OAuth 授权。按钮调用 ui.openExternalLink({ url })、ui.requestFullscreen() 或 lifecycle.leave()；退出前先存档或退房，卸载时 destroy()。`
 export const pages = [
   ['index.md', '概览', 'SDK 的职责与接入路径'],
   ['guide/quick-start.md', '快速开始', '正式包名、版本选择与接入流程'],
@@ -18,6 +18,6 @@ export const pages = [
   ['api/types.md', '类型定义', '公开 TypeScript 类型'],
   ['api/errors.md', '错误处理', '错误码、超时和重试边界'],
   ['guide/checklist.md', '接入检查', '联调与上线前的行为验收'],
-  ['guide/migration.md', '迁移与常见问题', '升级 1.3.0、外链／全屏／离开及旧宿主兼容'],
-  ['releases.md', '版本与支持范围', '1.3.0 已发布、新增外链和请求全屏能力'],
+  ['guide/migration.md', '迁移与常见问题', '升级 1.3.1、默认来源合并及旧宿主兼容'],
+  ['releases.md', '版本与支持范围', '1.3.1 默认来源合并、历史版本与支持范围'],
 ]

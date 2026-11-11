@@ -56,6 +56,12 @@ for (const [name, text] of [
   )
   assert(text.includes('guide/context.md'), `Missing optional context guide: ${name}`)
   assert(text.includes(sdkReleaseStatus), `Stale SDK release status: ${name}`)
+  assert(
+    text.includes('allowedHostOrigins') &&
+      text.includes('与默认来源合并、去重') &&
+      text.includes('https://www.kookapp.cn'),
+    `Missing SDK 1.3.1 origin merging: ${name}`
+  )
   assert(text.includes('createKookClient()') && text.includes('lifecycle.leave()'), `Stale SDK integration: ${name}`)
   assert(
     text.includes('ui.openExternalLink(') && text.includes('ui.requestFullscreen()'),

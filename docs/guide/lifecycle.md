@@ -1,6 +1,6 @@
 # 生命周期、离开与恢复
 
-游戏资源加载、KOOK 连接和用户授权分别变化。使用对应事件更新界面，不要用心跳推断用户是否授权或游戏服务器是否健康。
+游戏内容可用时上报加载结果；页面状态和连接变化通过事件更新，卸载时清理 SDK。
 
 ## 上报加载结果
 
@@ -17,13 +17,11 @@ export async function reportGameLoad(client: KookClient, usable: boolean) {
 }
 ```
 
-按实际可用结果选择一个分支，每次加载尝试只提交一种确定结果；重复相同结果合并，相反结果返回 `STATE_CONFLICT`。失败原因限于 `game_login_failed`、`game_resource_failed`、`game_initialization_failed`。欢迎页或游客玩法已可用时可以先上报成功，不必等待所有可选授权；正常取消授权不属于资源加载失败。
-
-`ready()` 只确认 SDK 就绪。当前 KOOK 宿主默认在 ready 后等待 60 秒加载报告；缺少报告会转为加载失败，停止连接并退出平台参与。应及时报告实际结果，不要把日志输出或拿到实例 ID 当作加载已上报。
+内容可用时上报 `loaded`，失败时选择 `game_login_failed / game_resource_failed / game_initialization_failed`。同一加载尝试只提交一种结果，相反结果返回 `STATE_CONFLICT`。当前 KOOK 宿主默认在 ready 后等待 60 秒，超时未报告会结束本次连接。
 
 ## 主动离开游戏
 
-SDK 1.2.0 提供 `client.lifecycle.leave()`，在 ready 后调用，无需 OAuth。退出按钮先完成游戏自己的退房、存档或会话清理，再请求 KOOK 离开当前游戏：
+退出按钮先完成游戏自己的退房、存档或会话清理，再调用 `client.lifecycle.leave()`：
 
 ```ts
 import type { KookClient } from '@kookapp/kook-minigame-sdk'
@@ -40,15 +38,13 @@ export async function leaveFromGame(client: KookClient, cleanupGame: () => Promi
 }
 ```
 
-上例从按钮回调调用，将返回消息用于页面仍存在时的提示。KOOK 确认退出后关闭当前游戏承载，独立窗口也会关闭，因此不能依赖 await 之后执行重要业务。
+KOOK 确认退出后会关闭当前游戏页面，因此将重要业务放在调用之前。失败可由用户重试；10 秒超时，恢复后不自动重放，见[业务 API](../api/business.md#lifecycle-leave)。
 
-并发调用合并，失败可重试；超时或连接中断时结果可能未知，断线恢复不会自动重放离开请求。接口只针对当前游戏，不接收目标参数；旧客户端未声明能力时展示提示。方法签名和错误边界见[业务 API](../api/business.md#lifecycle-leave)。
-
-`destroy()` 只清理 SDK 本地资源，不会主动退出平台参与，也不会关闭游戏。页面卸载时照常调用它，但不要用它代替离开接口或当作退出成功。
+页面卸载时调用 `destroy()` 清理本地资源，主动退出使用 `leave()`。
 
 ## 生命周期与异常处理
 
-SDK 连接、平台授权、OAuth code／token 和游戏自己的登录态分别维护。授权事件只有 `unauthorized/authorized/revoked`，没有 `expired`；code 到期不使 SDK 授权自动失效。平台结束绑定时，游戏自己的会话、WebSocket 和房间恢复逻辑仍需独立清理。
+授权变化通过 `auth.onStateChanged()` 处理。平台绑定结束时，清理游戏自己的会话、WebSocket 和房间状态。
 
 ## 监听生命周期
 
@@ -68,7 +64,7 @@ await subscription.unsubscribe()
 
 ## 观察连接
 
-`onConnectionChanged()` 立即提供一次当前快照，返回同步取消监听函数。业务事件订阅则返回 Promise 和 `unsubscribe()` 句柄，两者不要混用。
+`onConnectionChanged()` 立即提供当前快照，返回同步取消监听函数：
 
 ```ts
 const stop = client.onConnectionChanged((connection) => {
@@ -89,9 +85,7 @@ stop()
 
 连接恢复成功时 `epoch` 递增。由游戏的恢复逻辑调用一次 `ready()`，重新读取能力和新授权快照。若宿主确认授权仍有效，已保留的参与者监听会恢复；否则等待用户再次发起授权。
 
-恢复不会自动重放授权弹窗、邀请、加载上报、离开请求或游戏后端登录。旧 code 不自动复用。恢复后的实例绑定必须仍属于同一 `gameCode` 和 `instanceId`；发生变化会返回 `STALE_SESSION`。
-
-宿主不支持可选心跳或恢复机制时，不妨碍最初建立连接，但游戏不能因此假定具备自动恢复能力。`connection.server` 观察的是 KOOK 服务链路，不是游戏自己的服务端。
+恢复后由用户重新发起邀请、授权或退出等操作，旧 code 不重复提交。`STALE_SESSION` 表示绑定已变化，引导重新打开游戏。
 
 ## 清理
 

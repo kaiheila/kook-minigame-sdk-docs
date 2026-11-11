@@ -1,6 +1,6 @@
 # 游戏后端登录
 
-SDK 获取短期授权码，游戏后端校验并换码、读取可信用户身份，建立游戏自己的登录态。基础 SDK 加载可以不申请 OAuth；需要账号、存档或成绩时再接入本页流程。
+需要账号、存档或成绩时，调用 SDK 获取授权码，由游戏后端校验、换码并建立会话。
 
 ## 标识与配置
 
@@ -16,9 +16,7 @@ SDK 获取短期授权码，游戏后端校验并换码、读取可信用户身�
 
 ## OAuth 回调与换码
 
-授权码签发与游戏后端换码使用的 `redirect_uri` 必须完全一致。SDK `session.get()` 的可选 `redirectUri` 支持完整 HTTPS 地址的校验及转发，省略时使用宿主默认值；SDK 不访问该 URL。
-
-**SDK 的参数支持不等于所有宿主已经支持自定义回调。** 当前已核对的 KOOK 宿主实现采用固定平台回调 `https://www.kookapp.cn/oauth/mini-game/callback`，并拒绝其他地址。接入这一宿主时，游戏后端配置该值，SDK 可以省略参数或显式传入同一值。自定义地址只有在目标宿主和 OAuth 后端确认支持、且应用已登记后才可启用。
+游戏后端配置 `redirect_uri=https://www.kookapp.cn/oauth/mini-game/callback`，前端 `session.get()` 省略 `redirectUri` 即可使用宿主默认值。授权和换码值必须一致；如需自定义回调，先确认目标环境支持并完成应用登记。
 
 游戏后端向配置的 KOOK 服务 origin 发起表单编码请求：
 
@@ -31,7 +29,7 @@ grant_type=authorization_code&client_id=...&client_secret=...&redirect_uri=...&c
 
 使用返回的 Bearer `access_token` 调用 `GET /api/v3/user/me`，取得可信用户身份。token 的 `expires_in` 是秒数；SDK 授权码结果的 `expiresAt` 是 Unix 毫秒，不能混用。用户接口字段及应用开放标识以目标平台接口定义为准，不使用 SDK 候选用户的临时 ID 建号。
 
-换码、用户资料和[上下文](./context.md)属于 HTTP 接口，不需要实现 bridge handler，也不存在可传任意方法名的 `client.request()`。应用凭据及 token 留在游戏后端，生产使用 HTTPS。
+应用凭据与 token 保存在游戏后端，生产请求使用 HTTPS；需要实例或邀请关系时继续[查询上下文](./context.md)。
 
 ## 游戏登录事务与浏览器会话
 
@@ -52,4 +50,4 @@ grant_type=authorization_code&client_id=...&client_secret=...&redirect_uri=...&c
 
 `cancelled` 为正常结果，不换码、不循环自动弹框；用户再次发起时创建新事务。一次性授权码不能反复提交；换码超时不代表没有执行，后端按平台协议核对结果。基础登录成功后，[上下文查询](./context.md)失败只阻止依赖它的玩法，不应把已经登录的账号一并清掉。
 
-示例中的游戏后端接口与游戏登录态由接入者实现，SDK 不提供 OAuth token 存储、游戏账号映射或会话续期。日志区分授权、换码、用户资料和游戏登录阶段，脱敏 code、state、nonce、token、Cookie 与 secret，只保留非敏感关联标识及错误码。
+游戏后端自行维护账号映射与会话续期；日志仅保留调用阶段、非敏感关联标识和错误码。

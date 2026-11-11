@@ -1,25 +1,34 @@
 # 版本与支持范围
 
-## 当前文档版本：1.3.0
+## 当前文档版本：1.3.1
 
-本文档对应已发布的 SDK `1.3.0`，更新于 2026-11-09。固定安装并提交锁文件：
+本文档对应已发布的 SDK `1.3.1`，更新于 2026-11-11。固定安装并提交锁文件：
 
 ```sh
-pnpm add --save-exact @kookapp/kook-minigame-sdk@1.3.0
+pnpm add --save-exact @kookapp/kook-minigame-sdk@1.3.1
 ```
 
 ESM 使用具名导入 `import { createKookClient } from '@kookapp/kook-minigame-sdk'`，CommonJS 从 `require(...)` 解构同名成员。更早版本的入口及权限行为可能不同，升级时对照[迁移指南](./guide/migration.md)。
+
+## 1.3.1 保留默认宿主来源
+
+- 自动模式的 `allowedHostOrigins` 与默认来源合并、去重，始终保留 `https://www.kookapp.cn`。修复仅配置测试来源时，打包 PC 的固定 HTTPS 父页面不再被信任而导致启动超时的问题。
+- 调用方传入列表仍须非空、最多 16 项；SDK 逐项校验后合并去重。默认来源无需重复添加，省略字段即可只用默认来源。
+- 校验当前 parent Window、精确 HTTPS 来源及本次启动绑定的规则继续生效；不从消息、query 或 referrer 自动信任其他来源。
+- 完整显式启动绑定仅使用绑定中的 `hostOrigin`，不参与上述合并。没有新增 API、capability 或 OAuth scope，wire `contractVersion` 仍为 `1`。
+
+示例与升级注意事项见[迁移到 1.3.1](./guide/migration.md#upgrade-1-3-1)和[客户端参数](./api/client.md#create-client)。
 
 ## 1.3.0 新增外链和全屏
 
 - `client.ui.openExternalLink({ url }): Promise<void>` 打开完整 HTTP/HTTPS 外链，保留 KOOK 消息外链的跳转提示和风险检查，不改变当前游戏地址。
 - `client.ui.requestFullscreen(): Promise<void>` 请求当前宿主游戏承载全屏，与宿主按钮共用状态处理；重复请求保持全屏，取消使用 Esc 或宿主按钮。
-- 两者在 ready 后可用，无需 OAuth；须从前台用户点击触发，先检查各自 capability。普通请求上限为 5 秒，连接恢复后不自动重放。
+- 两者从前台用户点击触发，先检查各自 capability。请求上限为 5 秒，恢复后不自动重放。
 - 1.2.0 不含这两个方法。旧宿主可能未声明新能力，不能仅凭 npm 包版本假定可用。参数、成功含义和错误处理见[打开外链](./api/business.md#ui-open-external-link)与[请求全屏](./api/business.md#ui-request-fullscreen)。
 
 ## 1.2.0 新增主动离开
 
-- `client.lifecycle.leave(): Promise<void>` 在 ready 后请求离开当前 KOOK 游戏，无需 OAuth。
+- `client.lifecycle.leave(): Promise<void>` 请求离开当前 KOOK 游戏。
 - 调用前检查同名 capability，先完成游戏自己的退房或存档；KOOK 确认平台退出后关闭当前承载。
 - 并发调用合并，失败可重试，断线恢复不自动重放。`destroy()` 仍只清理 SDK 本地资源。
 - SDK 和 KOOK 的部署版本分别确认，旧客户端不声明能力时降级处理。详见[离开接口](./api/business.md#lifecycle-leave)。
@@ -41,18 +50,17 @@ ESM 使用具名导入 `import { createKookClient } from '@kookapp/kook-minigame
 
 | 行为                             | 需要确认什么                                                                                      |
 | -------------------------------- | ------------------------------------------------------------------------------------------------- |
+| 配置测试来源后保留 PC 默认来源   | SDK 1.3.1 自动模式将 `allowedHostOrigins` 与默认来源合并；游戏自有来源检查也需同步                |
 | 开放 scope 与 `redirectUri` 参数 | 固定使用支持当前公开类型的 SDK；宿主和 OAuth 后端仍决定应用实际获准范围                           |
 | 自定义 OAuth 回调                | 当前已核对的 KOOK 宿主仍采用固定平台回调；SDK 能转发其他 HTTPS 地址不代表部署环境已允许           |
 | 频道不传 roomId 的邀请           | 目标宿主须已接入原生频道游戏邀请分流；仅检查 `ui.openInviteModal` capability 不足以识别旧默认行为 |
 | 社交、频道和参与者查询           | 目标宿主声明对应 capability，并取得当前所需授权                                                   |
 | 断线恢复                         | 目标宿主提供有效恢复许可并确认原关系；SDK 本身不保留平台参与关系                                  |
-| 游戏主动离开                     | SDK 1.2.0，且 KOOK 声明 `lifecycle.leave` capability；仅销毁 SDK 不会主动退出游戏                 |
+| 游戏主动离开                     | SDK 1.2.0 起，检查 `lifecycle.leave` capability，先存档或退房再调用                               |
 | 打开外链                         | SDK 1.3.0，KOOK 声明 `ui.openExternalLink`；保留消息外链安全流程                                  |
 | 请求宿主全屏                     | SDK 1.3.0，KOOK 声明 `ui.requestFullscreen`；从前台用户点击发起                                   |
 
 包发布不等于平台能力已在所有环境上线。真实验收分别记录 SDK 版本、宿主版本、环境和场景，不把模拟结果当作真实账号投递成功。
-
-1.3.0 的外链和全屏还要求目标 KOOK 分别声明 `ui.openExternalLink`、`ui.requestFullscreen` capability。两者都不要求用户授权；浏览器手势、前台状态、宿主弹框及风险规则仍可能阻止本次操作。
 
 ## 支持范围
 
